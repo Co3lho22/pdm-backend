@@ -1,6 +1,3 @@
-fcup/pdm/myapp/api/UserResource.class
-fcup/pdm/myapp/dao/UserDAO.class
-fcup/pdm/myapp/model/User.class
-fcup/pdm/myapp/util/PasswordUtil.class
-fcup/pdm/myapp/util/DBConnection.class
-fcup/pdm/myapp/api/MyResource.class
+fcup/pdm/myapp/Main.class
+fcup/pdm/myapp/MyApplication.class
+fcup/pdm/myapp/GreetingResource.class
