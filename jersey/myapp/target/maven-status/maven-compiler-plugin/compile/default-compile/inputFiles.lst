@@ -1,3 +1,7 @@
-/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/GreetingResource.java
-/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/Main.java
-/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/MyApplication.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/util/PasswordUtil.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/api/GreetingResource.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/model/User.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/api/MyApplication.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/util/DBConnection.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/dao/UserDAO.java
+/home/co3lho22/pdm-backend/jersey/myapp/src/main/java/fcup/pdm/myapp/api/Main.java

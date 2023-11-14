@@ -1,4 +1,4 @@
-package fcup.pdm.myapp;
+package fcup.pdm.myapp.api;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;

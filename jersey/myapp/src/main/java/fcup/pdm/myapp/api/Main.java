@@ -1,4 +1,4 @@
-package fcup.pdm.myapp;
+package fcup.pdm.myapp.api;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;

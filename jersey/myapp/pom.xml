@@ -13,6 +13,7 @@
         <jetty.version>11.0.18</jetty.version>
         <jersey.version>3.0.4</jersey.version>
         <log4j.version>2.21.1</log4j.version>
+        <jbcrypt.version>0.4</jbcrypt.version>
     </properties>
 
     <dependencies>
@@ -70,6 +71,12 @@
             <version>${log4j.version}</version>
         </dependency>
 
+	<!-- jbcrypt  -->
+	<dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+	    <version>${jbcrypt.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
