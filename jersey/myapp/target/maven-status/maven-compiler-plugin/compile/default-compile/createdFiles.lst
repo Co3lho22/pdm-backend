@@ -4,4 +4,5 @@ fcup/pdm/myapp/model/User.class
 fcup/pdm/myapp/util/PasswordUtil.class
 fcup/pdm/myapp/util/DBConnection.class
 fcup/pdm/myapp/api/Main.class
+fcup/pdm/myapp/api/RegisterResource.class
 fcup/pdm/myapp/api/MyApplication.class

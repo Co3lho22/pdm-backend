@@ -13,7 +13,8 @@ public class MyApplication extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
         classes.add(GreetingResource.class);
-        // Add other resources or providers as needed
+        classes.add(RegisterResource.class);
+	// Add other resources or providers as needed
         return classes;
     }
 
