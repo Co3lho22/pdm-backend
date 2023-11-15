@@ -1,5 +1,8 @@
 package fcup.pdm.myapp.api;
 
+import fcup.pdm.myapp.dao.UserDAO;
+import fcup.pdm.myapp.util.PasswordUtil;
+
 import fcup.pdm.myapp.model.User;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -12,9 +15,20 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/login")
 public class LoginResource {
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String VerifyLogin(User user) {
-        return "Hello, World!";
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response verifyLogin(User user) {
+        UserDAO userDao = new UserDAO();
+        User foundUser = userDao.getUserByUsername(user.getUsername());
+
+        if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
+            // Login successful
+            return Response.ok().entity("Login Successful").build();
+        } else {
+            // Login failed
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+        }
     }
 }
