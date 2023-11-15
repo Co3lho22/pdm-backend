@@ -14,7 +14,10 @@ public class MyApplication extends Application {
         Set<Class<?>> classes = new HashSet<>();
         classes.add(GreetingResource.class);
         classes.add(RegisterResource.class);
-	// Add other resources or providers as needed
+        classes.add(LoginResource.class);
+        classes.add(FavGenreResource.class);
+        classes.add(FilmResource.class);
+
         return classes;
     }
 
