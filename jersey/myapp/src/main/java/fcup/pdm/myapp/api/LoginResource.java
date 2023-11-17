@@ -2,12 +2,12 @@ package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.util.PasswordUtil;
+import fcup.pdm.myapp.util.JwtUtil;
 
 import fcup.pdm.myapp.model.User;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -25,7 +25,8 @@ public class LoginResource {
 
         if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
             // Login successful
-            return Response.ok().entity("Login Successful").build();
+            String token = JwtUtil.generateToken(user.getUsername());
+            return Response.ok().entity("{\"token\":\"" + token + "\"}").build();
         } else {
             // Login failed
             return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
