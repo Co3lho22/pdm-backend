@@ -12,11 +12,26 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "u7Y8n9C0q1S2t3V4w5X6z7G8h9J0k1L2m3N4o5P6q7R8s9T0v1U2w3Y4z5A6b7C8";
     private static final long EXPIRATION_TIME = 900_000; // 15 minutes in milliseconds
+    private static final long REFRESH_TOKEN_VALIDITY = 604800000; // 7 days in milliseconds
 
     public static String generateToken(String username) {
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(SECRET_KEY));
+    }
+
+    public static String getUsernameFromToken(String token) {
+        DecodedJWT jwt = JWT.require(Algorithm.HMAC512(SECRET_KEY))
+                .build()
+                .verify(token);
+        return jwt.getSubject();
+    }
+
+    public static String generateRefreshToken(String username) {
+        return JWT.create()
+                .withSubject(username)
+                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
                 .sign(Algorithm.HMAC512(SECRET_KEY));
     }
 
