@@ -14,6 +14,7 @@
         <jersey.version>3.0.4</jersey.version>
         <log4j.version>2.21.1</log4j.version>
         <jbcrypt.version>0.4</jbcrypt.version>
+        <mariadb.version>3.3.0</mariadb.version>
     </properties>
 
     <dependencies>
@@ -82,12 +83,20 @@
             <version>${log4j.version}</version>
         </dependency>
 
-	<!-- jbcrypt  -->
-	<dependency>
+        <!-- jbcrypt  -->
+        <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
-	    <version>${jbcrypt.version}</version>
+	        <version>${jbcrypt.version}</version>
         </dependency>
+
+        <!-- mariadb  -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
