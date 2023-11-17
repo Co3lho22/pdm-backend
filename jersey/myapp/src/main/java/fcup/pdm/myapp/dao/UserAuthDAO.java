@@ -40,4 +40,19 @@ public class UserAuthDAO {
             e.printStackTrace();
         }
     }
+    
+    public void storeRefreshToken(int userId, String refreshToken) {
+        String query = "INSERT INTO USER_AUTH (user_id, refresh_token) VALUES (?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, userId);
+            ps.setString(2, refreshToken);
+            ps.setString(3, refreshToken);
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

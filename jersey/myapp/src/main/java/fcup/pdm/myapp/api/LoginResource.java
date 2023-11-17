@@ -1,5 +1,6 @@
 package fcup.pdm.myapp.api;
 
+import fcup.pdm.myapp.dao.UserAuthDAO;
 import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.util.PasswordUtil;
 import fcup.pdm.myapp.util.JwtUtil;
@@ -25,8 +26,15 @@ public class LoginResource {
 
         if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
             // Login successful
-            String token = JwtUtil.generateToken(user.getUsername());
-            return Response.ok().entity("{\"token\":\"" + token + "\"}").build();
+            String accessToken = JwtUtil.generateToken(user.getUsername());
+            String refreshToken = JwtUtil.generateRefreshToken(user.getUsername());
+
+            // Store the refresh token in the database
+            UserAuthDAO userAuthDAO = new UserAuthDAO();
+            userAuthDAO.storeRefreshToken(foundUser.getId(), refreshToken);
+
+            // Return both the access token and the refresh token
+            return Response.ok().entity("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}").build();
         } else {
             // Login failed
             return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
