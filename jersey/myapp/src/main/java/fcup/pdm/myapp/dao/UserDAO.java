@@ -13,7 +13,7 @@ public class UserDAO {
         User user = null;
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM users WHERE username = ?";
+            String query = "SELECT * FROM USERS WHERE username = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
@@ -35,7 +35,7 @@ public class UserDAO {
     public User getUserByUsernameAndPassword(String username, String hashedPassword) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM users WHERE username = ? AND hashed_password = ?";
+            String query = "SELECT * FROM USERS WHERE username = ? AND hashed_password = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, username);
             ps.setString(2, hashedPassword);
@@ -57,7 +57,7 @@ public class UserDAO {
     public boolean addUser(User user) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "INSERT INTO users (username, hashed_password, email) VALUES (?, ?, ?)";
+            String query = "INSERT INTO USERS (username, hashed_password, email) VALUES (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getHashedPassword());
