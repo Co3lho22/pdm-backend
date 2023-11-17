@@ -25,18 +25,27 @@ public class RegisterResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
 
-        logger.debug("Attempting to register user: " + user.getUsername());
+        // logger.debug("Attempting to register user: " + user.getUsername());
 
         UserDAO userDao = new UserDAO();
         user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
 
-        if (userDao.addUser(user)) {
-            // Registration successful
-            logger.info("Registration successful for user: " + user.getUsername());
-            return Response.ok().entity("Registration Successful").build();
-        } else {
-            // Registration failed
-            logger.info("Registration successful for user: " + user.getUsername());
+        if(userDao.userExists(user.getUsername())){
+            return Response.status(Response.Status.BAD_REQUEST).entity("User already exists").build();
+        }
+
+        try {
+            if (userDao.addUser(user)) {
+                // Registration successful
+                logger.info("Registration successful for user: " + user.getUsername());
+                return Response.ok().entity("Registration Successful").build();
+            } else {
+                // Registration failed
+                logger.info("Registration successful for user: " + user.getUsername());
+                return Response.status(Response.Status.BAD_REQUEST).entity("Registration Failed").build();
+            }
+        }catch(Exception e){
+            logger.warn(e);
             return Response.status(Response.Status.BAD_REQUEST).entity("Registration Failed").build();
         }
     }

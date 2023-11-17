@@ -8,33 +8,14 @@ public class User {
     private String password;
     private String hashedPassword;
     private String email;
+    private String country;
+    private String phone;
     private Timestamp dateCreated;
 
     // Default Constructor
     public User() {
     }
 
-    // Constructor with password (unhashed)
-    public User(int id, String username, String password, String email) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.hashedPassword = null;
-    }
-
-
-    // Constructor with hashedPassword
-    public User(int id, String username, String hashedPassword, String email, Timestamp dateCreated) {
-        this.id = id;
-        this.username = username;
-        this.hashedPassword = hashedPassword;
-        this.email = email;
-        this.dateCreated = dateCreated;
-        this.password = null;
-    }
-
-    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -51,9 +32,7 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword(){
-        return password;
-    }
+    public String getPassword(){return password;}
 
     public void setPassword(String password){
         this.password = password;
@@ -74,6 +53,14 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getCountry(){return country;}
+
+    public void setCountry(String country){this.country = country;}
+
+    public String getPhone(){return phone;}
+
+    public void setPhone(String phone){this.phone = phone;}
 
     public Timestamp getDateCreated() {
         return dateCreated;

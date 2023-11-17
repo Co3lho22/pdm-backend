@@ -54,14 +54,34 @@ public class UserDAO {
         return null;
     }
 
+    public boolean userExists(String username) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT COUNT(*) FROM USERS WHERE username = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean addUser(User user) {
         try {
             Connection connection = DBConnection.getConnection();
-            String query = "INSERT INTO USERS (username, hashed_password, email) VALUES (?, ?, ?)";
+            String query = "INSERT INTO USERS (username, hashed_password, email, country, phone) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getHashedPassword());
             ps.setString(3, user.getEmail());
+            ps.setString(4, user.getCountry());
+            ps.setString(5, user.getPhone());
+
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception e) {
