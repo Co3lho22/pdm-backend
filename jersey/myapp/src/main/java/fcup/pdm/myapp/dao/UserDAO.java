@@ -54,6 +54,37 @@ public class UserDAO {
         return null;
     }
 
+    public int getUserIDByUsername(String username) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT id FROM USERS WHERE username = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return Integer.parseInt(rs.getString("id"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean removeUserByUsername(String username) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "DELETE FROM USERS WHERE username = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean userExists(String username) {
         try {
             Connection connection = DBConnection.getConnection();
@@ -98,6 +129,14 @@ public class UserDAO {
             ps.setString(5, user.getPhone());
 
             int rowsAffected = ps.executeUpdate();
+            int userId = getUserIDByUsername(user.getUsername());
+            if(userId != -1){
+                user.setId(userId);
+            }else{
+                removeUserByUsername(user.getUsername());
+                return false;
+            }
+
             if(rowsAffected > 0){
                 return addUserPerms(connection, user);
             }else{
