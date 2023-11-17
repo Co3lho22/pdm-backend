@@ -1,5 +1,7 @@
 package fcup.pdm.myapp.api;
 
+import fcup.pdm.myapp.dao.UserAuthDAO;
+import fcup.pdm.myapp.model.TokenRequest;
 import fcup.pdm.myapp.util.JwtUtil;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -16,10 +18,26 @@ public class RefreshTokenResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response refreshToken(TokenRequest request) {
         String refreshToken = request.getRefreshToken();
-        // Validate the refresh token...
-        // If valid, generate a new access token and optionally a new refresh token
+
+        // Validate the refresh token
+        UserAuthDAO userAuthDAO = new UserAuthDAO();
+        if (!userAuthDAO.isRefreshTokenValid(refreshToken)) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid refresh token").build();
+        }
+
+        // Extract username from the refresh token
+        String username = JwtUtil.getUsernameFromToken(refreshToken);
+
+        // Generate a new access token
         String newAccessToken = JwtUtil.generateToken(username);
+
         // Optionally, generate a new refresh token
-        return Response.ok().entity("{\"accessToken\":\"" + newAccessToken + "\"}").build();
+        String newRefreshToken = JwtUtil.generateRefreshToken(username);
+
+        // Update the refresh token in the database
+        userAuthDAO.updateRefreshToken(username, newRefreshToken);
+
+        // Return the new tokens
+        return Response.ok().entity("{\"accessToken\":\"" + newAccessToken + "\", \"refreshToken\":\"" + newRefreshToken + "\"}").build();
     }
 }
