@@ -71,6 +71,21 @@ public class UserDAO {
         return false;
     }
 
+    public boolean addUserPerms(Connection connection, User user) {
+        try{
+            String query = "INSERT INTO USER_ROLE (user_id, role_id) VALUES (?, (SELECT id FROM ROLE WHERE name = 'user'))";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setLong(1, user.getId());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean addUser(User user) {
         try {
             Connection connection = DBConnection.getConnection();
@@ -83,7 +98,11 @@ public class UserDAO {
             ps.setString(5, user.getPhone());
 
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            if(rowsAffected > 0){
+                return addUserPerms(connection, user);
+            }else{
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
