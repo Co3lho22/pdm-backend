@@ -6,10 +6,14 @@ package fcup.pdm.myapp.dao;
         import java.util.ArrayList;
         import java.util.List;
 
+        import fcup.pdm.myapp.api.RegisterResource;
         import fcup.pdm.myapp.util.DBConnection;
         import fcup.pdm.myapp.model.Permission;
+        import org.apache.logging.log4j.LogManager;
+        import org.apache.logging.log4j.Logger;
 
 public class PermissionDAO {
+    private static final Logger logger = LogManager.getLogger(RegisterResource.class);
 
     public List<Permission> getPermissionsByRoleId(int roleId) {
         List<Permission> permissions = new ArrayList<>();

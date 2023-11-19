@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 import java.util.Date;
+import java.util.List;
 
 public class JwtUtil {
 
@@ -14,9 +15,10 @@ public class JwtUtil {
     private static final long EXPIRATION_TIME = 900_000; // 15 minutes in milliseconds
     private static final long REFRESH_TOKEN_VALIDITY = 604800000; // 7 days in milliseconds
 
-    public static String generateToken(String username) {
+    public static String generateToken(String username, List<String> roles) {
         return JWT.create()
                 .withSubject(username)
+                .withClaim("roles", roles)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET_KEY));
     }
@@ -28,9 +30,10 @@ public class JwtUtil {
         return jwt.getSubject();
     }
 
-    public static String generateRefreshToken(String username) {
+    public static String generateRefreshToken(String username, List<String> roles) {
         return JWT.create()
                 .withSubject(username)
+                .withClaim("roles", roles)
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
                 .sign(Algorithm.HMAC512(SECRET_KEY));
     }

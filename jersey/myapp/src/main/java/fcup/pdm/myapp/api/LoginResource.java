@@ -4,6 +4,7 @@ import fcup.pdm.myapp.dao.UserAuthDAO;
 import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.util.PasswordUtil;
 import fcup.pdm.myapp.util.JwtUtil;
+import fcup.pdm.myapp.util.AppConstants;
 
 import fcup.pdm.myapp.model.User;
 import jakarta.ws.rs.Consumes;
@@ -14,6 +15,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Path("/login")
@@ -29,8 +33,11 @@ public class LoginResource {
         try{
             if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
                 // Login successful
-                String accessToken = JwtUtil.generateToken(user.getUsername());
-                String refreshToken = JwtUtil.generateRefreshToken(user.getUsername());
+                List<String> roles = new ArrayList<>();
+                roles.add(AppConstants.ROLE_USER);
+
+                String accessToken = JwtUtil.generateToken(user.getUsername(), roles);
+                String refreshToken = JwtUtil.generateRefreshToken(user.getUsername(), roles);
 
                 // Store the refresh token in the database
                 UserAuthDAO userAuthDAO = new UserAuthDAO();

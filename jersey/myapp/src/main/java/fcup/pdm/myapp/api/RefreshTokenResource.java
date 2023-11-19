@@ -2,6 +2,7 @@ package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.UserAuthDAO;
 import fcup.pdm.myapp.model.TokenRequest;
+import fcup.pdm.myapp.util.AppConstants;
 import fcup.pdm.myapp.util.JwtUtil;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -11,6 +12,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/refresh")
 public class RefreshTokenResource {
@@ -34,10 +38,12 @@ public class RefreshTokenResource {
             String username = JwtUtil.getUsernameFromToken(refreshToken);
 
             // Generate a new access token
-            String newAccessToken = JwtUtil.generateToken(username);
+            List<String> roles = new ArrayList<>();
+            roles.add(AppConstants.ROLE_USER);
+            String newAccessToken = JwtUtil.generateToken(username, roles);
 
             // Optionally, generate a new refresh token
-            String newRefreshToken = JwtUtil.generateRefreshToken(username);
+            String newRefreshToken = JwtUtil.generateRefreshToken(username, roles);
 
             // Update the refresh token in the database
             userAuthDAO.updateRefreshToken(username, newRefreshToken);

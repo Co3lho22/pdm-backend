@@ -3,6 +3,8 @@ package fcup.pdm.myapp.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import fcup.pdm.myapp.util.DBConnection;
 import fcup.pdm.myapp.model.User;
@@ -137,6 +139,28 @@ public class UserDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<String> getUserRoles(int userId) {
+        List<String> roles = new ArrayList<>();
+
+        try  (Connection connection = DBConnection.getConnection();
+              PreparedStatement ps = connection.prepareStatement("SELECT r.name FROM ROLE r " +
+                      "INNER JOIN USER_ROLE ur ON r.id = ur.role_id WHERE ur.user_id = ?")){
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    roles.add(rs.getString("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return roles;
+        }
+
+        return roles;
     }
 }
 

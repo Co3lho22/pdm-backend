@@ -3,9 +3,9 @@ package fcup.pdm.myapp.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 
 import fcup.pdm.myapp.util.DBConnection;
+import fcup.pdm.myapp.util.JwtUtil;
 
 public class UserAuthDAO {
 
@@ -16,9 +16,12 @@ public class UserAuthDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                // Check if the token is expired
-                Timestamp tokenExpiration = rs.getTimestamp("token_expiration");
-                return tokenExpiration.after(new Timestamp(System.currentTimeMillis()));
+                try {
+                    JwtUtil.verifyToken(refreshToken);
+                    return true; // Token is valid
+                } catch (Exception e) {
+                    return false; // Token is invalid or expired
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
