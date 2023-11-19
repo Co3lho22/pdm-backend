@@ -16,6 +16,8 @@
         <jbcrypt.version>0.4</jbcrypt.version>
         <mariadb.version>3.3.0</mariadb.version>
         <auth.version>4.4.0</auth.version>
+        <zaxxer.version>5.1.0</zaxxer.version>
+
     </properties>
 
     <dependencies>
@@ -96,6 +98,13 @@
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>${mariadb.version}</version>
+        </dependency>
+
+        <!-- HikariCP - Thread pooling for DB connection -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${zaxxer.version}</version>
         </dependency>
 
         <!-- Auth  -->

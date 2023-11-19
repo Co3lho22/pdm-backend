@@ -10,10 +10,8 @@ import fcup.pdm.myapp.util.DBConnection;
 public class UserAuthDAO {
 
     public boolean isRefreshTokenValid(String refreshToken) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM USER_AUTH WHERE refresh_token = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM USER_AUTH WHERE refresh_token = ?")){
             ps.setString(1, refreshToken);
             ResultSet rs = ps.executeQuery();
 
@@ -29,10 +27,9 @@ public class UserAuthDAO {
     }
 
     public void updateRefreshToken(String username, String newRefreshToken) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "UPDATE USER_AUTH SET refresh_token = ? WHERE user_id = (SELECT id FROM USERS WHERE username = ?)";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("UPDATE USER_AUTH SET refresh_token = ? WHERE " +
+                     "user_id = (SELECT id FROM USERS WHERE username = ?)")){
             ps.setString(1, newRefreshToken);
             ps.setString(2, username);
             ps.executeUpdate();
@@ -42,9 +39,9 @@ public class UserAuthDAO {
     }
     
     public void storeRefreshToken(int userId, String refreshToken) {
-        String query = "INSERT INTO USER_AUTH (user_id, refresh_token) VALUES (?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?";
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
+             PreparedStatement ps = connection.prepareStatement( "INSERT INTO USER_AUTH (user_id, refresh_token) " +
+                     "VALUES (?, ?) ON DUPLICATE KEY UPDATE refresh_token = ?")){
 
             ps.setInt(1, userId);
             ps.setString(2, refreshToken);

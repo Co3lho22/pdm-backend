@@ -1,25 +1,33 @@
 package fcup.pdm.myapp.util;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Properties;
 
 public class DBConnection {
 
-    private static Connection connection;
+    private static HikariDataSource dataSource;
 
-    public static Connection getConnection() throws Exception {
-        if (connection == null) {
+    static {
+        try {
             Properties props = new Properties();
             props.load(DBConnection.class.getClassLoader().getResourceAsStream("dbconfig.properties"));
 
-            String dbUrl = props.getProperty("db.url");
-            String dbUser = props.getProperty("db.user");
-            String dbPassword = props.getProperty("db.password");
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(props.getProperty("db.url"));
+            config.setUsername(props.getProperty("db.user"));
+            config.setPassword(props.getProperty("db.password"));
 
-            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            dataSource = new HikariDataSource(config);
+        } catch (Exception e) {
+            throw new RuntimeException("Error initializing datasource", e);
         }
-        return connection;
+    }
+
+    public static Connection getConnection() throws Exception {
+        return dataSource.getConnection();
     }
 }
-

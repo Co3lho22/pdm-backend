@@ -11,20 +11,18 @@ public class UserDAO {
 
     public User getUserByUsername(String username) {
         User user = null;
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM USERS WHERE username = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM USERS WHERE username = ?")) {
             ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                user = new User();
-                user.setId(rs.getInt("id"));
-                user.setUsername(rs.getString("username"));
-                user.setHashedPassword(rs.getString("hashed_password"));
-                user.setEmail(rs.getString("email"));
-                user.setDateCreated(rs.getTimestamp("date_created"));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new User();
+                    user.setId(rs.getInt("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setHashedPassword(rs.getString("hashed_password"));
+                    user.setEmail(rs.getString("email"));
+                    user.setDateCreated(rs.getTimestamp("date_created"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,15 +31,15 @@ public class UserDAO {
     }
 
     public User getUserByUsernameAndPassword(String username, String hashedPassword) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT * FROM USERS WHERE username = ? AND hashed_password = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        User user = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM USERS " +
+                     "WHERE username = ? AND hashed_password = ?")){
             ps.setString(1, username);
             ps.setString(2, hashedPassword);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                User user = new User();
+                user = new User();
                 user.setUsername(rs.getString("username"));
                 user.setHashedPassword(rs.getString("hashed_password"));
                 user.setEmail(rs.getString("email"));
@@ -51,14 +49,12 @@ public class UserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return user;
     }
 
     public int getUserIDByUsername(String username) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT id FROM USERS WHERE username = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT id FROM USERS WHERE username = ?")){
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -71,10 +67,8 @@ public class UserDAO {
     }
 
     public boolean removeUserByUsername(String username) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "DELETE FROM USERS WHERE username = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("DELETE FROM USERS WHERE username = ?")){
             ps.setString(1, username);
 
             int rowsAffected = ps.executeUpdate();
@@ -86,10 +80,8 @@ public class UserDAO {
     }
 
     public boolean userExists(String username) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT COUNT(*) FROM USERS WHERE username = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM USERS WHERE username = ?")){
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
 
@@ -102,10 +94,10 @@ public class UserDAO {
         return false;
     }
 
-    public boolean addUserPerms(Connection connection, User user) {
-        try{
-            String query = "INSERT INTO USER_ROLE (user_id, role_id) VALUES (?, (SELECT id FROM ROLE WHERE name = 'user'))";
-            PreparedStatement ps = connection.prepareStatement(query);
+    public boolean addUserPerms(User user) {
+        try(Connection connection = DBConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO USER_ROLE (user_id, role_id) " +
+                    "VALUES (?, (SELECT id FROM ROLE WHERE name = 'user'))")){
             ps.setLong(1, user.getId());
 
             int rowsAffected = ps.executeUpdate();
@@ -118,10 +110,9 @@ public class UserDAO {
     }
 
     public boolean addUser(User user) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "INSERT INTO USERS (username, hashed_password, email, country, phone) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("INSERT INTO USERS " +
+                     "(username, hashed_password, email, country, phone) VALUES (?, ?, ?, ?, ?)")){
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getHashedPassword());
             ps.setString(3, user.getEmail());
@@ -138,7 +129,7 @@ public class UserDAO {
             }
 
             if(rowsAffected > 0){
-                return addUserPerms(connection, user);
+                return addUserPerms(user);
             }else{
                 return false;
             }

@@ -13,10 +13,9 @@ public class RoleDAO {
 
     public List<Role> getRolesByUserId(int userId) {
         List<Role> roles = new ArrayList<>();
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT r.* FROM ROLE r INNER JOIN USER_ROLE ur ON r.id = ur.role_id WHERE ur.user_id = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT r.* FROM ROLE r INNER JOIN USER_ROLE ur " +
+                     "ON r.id = ur.role_id WHERE ur.user_id = ?")){
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 

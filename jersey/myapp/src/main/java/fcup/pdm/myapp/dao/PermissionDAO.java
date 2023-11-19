@@ -13,10 +13,9 @@ public class PermissionDAO {
 
     public List<Permission> getPermissionsByRoleId(int roleId) {
         List<Permission> permissions = new ArrayList<>();
-        try {
-            Connection connection = DBConnection.getConnection();
-            String query = "SELECT p.* FROM PERMISSION p INNER JOIN ROLE_PERMISSION rp ON p.id = rp.permission_id WHERE rp.role_id = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT p.* FROM PERMISSION p " +
+                     "INNER JOIN ROLE_PERMISSION rp ON p.id = rp.permission_id WHERE rp.role_id = ?")){
             ps.setInt(1, roleId);
             ResultSet rs = ps.executeQuery();
 
