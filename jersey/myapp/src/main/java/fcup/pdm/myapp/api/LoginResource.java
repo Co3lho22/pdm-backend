@@ -12,10 +12,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @Path("/login")
 public class LoginResource {
+    private static final Logger logger = LogManager.getLogger(RegisterResource.class);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -23,21 +26,25 @@ public class LoginResource {
     public Response verifyLogin(User user) {
         UserDAO userDao = new UserDAO();
         User foundUser = userDao.getUserByUsername(user.getUsername());
+        try{
+            if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
+                // Login successful
+                String accessToken = JwtUtil.generateToken(user.getUsername());
+                String refreshToken = JwtUtil.generateRefreshToken(user.getUsername());
 
-        if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
-            // Login successful
-            String accessToken = JwtUtil.generateToken(user.getUsername());
-            String refreshToken = JwtUtil.generateRefreshToken(user.getUsername());
+                // Store the refresh token in the database
+                UserAuthDAO userAuthDAO = new UserAuthDAO();
+                userAuthDAO.storeRefreshToken(foundUser.getId(), refreshToken);
 
-            // Store the refresh token in the database
-            UserAuthDAO userAuthDAO = new UserAuthDAO();
-            userAuthDAO.storeRefreshToken(foundUser.getId(), refreshToken);
-
-            // Return both the access token and the refresh token
-            return Response.ok().entity("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}").build();
-        } else {
-            // Login failed
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+                // Return both the access token and the refresh token
+                return Response.ok().entity("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}").build();
+            } else {
+                // Login failed
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+            }
+        } catch (Exception e){
+            logger.warn(e);
         }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server").build();
     }
 }
