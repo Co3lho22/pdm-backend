@@ -15,7 +15,7 @@ public class AuthFilter implements ContainerRequestFilter {
         URI requestUri = requestContext.getUriInfo().getRequestUri();
         String path = requestUri.getPath();
 
-        if (path.endsWith("/login") || path.endsWith("/register")) {
+        if (path.endsWith("/login") || path.endsWith("/register") || path.endsWith("/refresh")) {
             return;
         }
 
