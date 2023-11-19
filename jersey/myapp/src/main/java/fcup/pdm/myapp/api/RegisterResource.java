@@ -46,7 +46,8 @@ public class RegisterResource {
             }
         }catch(Exception e){
             logger.warn(e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("Registration Failed").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when " +
+                    "trying to register the user: " + user.getUsername()).build();
         }
     }
 }

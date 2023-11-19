@@ -46,7 +46,8 @@ public class RefreshTokenResource {
             return Response.ok().entity("{\"accessToken\":\"" + newAccessToken + "\", \"refreshToken\":\"" + newRefreshToken + "\"}").build();
         } catch (Exception e){
             logger.warn(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when tried " +
+                    "to get a new token").build();
         }
 
     }

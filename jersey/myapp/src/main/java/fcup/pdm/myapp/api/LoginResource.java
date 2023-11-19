@@ -44,7 +44,8 @@ public class LoginResource {
             }
         } catch (Exception e){
             logger.warn(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when " +
+                    "tried to verify the login").build();
         }
     }
 }
