@@ -17,6 +17,7 @@ public class MyApplication extends Application {
         classes.add(LoginResource.class);
         classes.add(FavGenreResource.class);
         classes.add(FilmResource.class);
+        classes.add(RefreshTokenResource.class);
 
         return classes;
     }
