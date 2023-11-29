@@ -12,7 +12,6 @@ public class User {
     private String phone;
     private Timestamp dateCreated;
 
-    // Default Constructor
     public User() {
     }
 
@@ -42,9 +41,7 @@ public class User {
         return hashedPassword;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
+    public void setHashedPassword(String hashedPassword) { this.hashedPassword = hashedPassword; }
 
     public String getEmail() {
         return email;

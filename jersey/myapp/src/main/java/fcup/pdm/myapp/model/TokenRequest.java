@@ -6,11 +6,7 @@ public class TokenRequest {
     public TokenRequest() {
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
+    public String getRefreshToken() { return refreshToken; }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
+    public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
 }
