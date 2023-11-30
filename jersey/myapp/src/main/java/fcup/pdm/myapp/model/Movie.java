@@ -2,7 +2,7 @@ package fcup.pdm.myapp.model;
 
 import java.util.Date;
 
-public class Film {
+public class Movie {
     private int id;
     private String title;
     private String genre;
@@ -12,7 +12,7 @@ public class Film {
     private String description;
 
 
-    public Film() {}
+    public Movie() {}
 
 
     public String getTitle() { return title; }
