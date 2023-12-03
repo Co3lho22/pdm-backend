@@ -30,7 +30,7 @@ public class RegisterResource {
         UserDAO userDao = new UserDAO();
         user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
 
-        if(userDao.userExists(user.getUsername())){
+        if(userDao.userExists(user)){
             return Response.status(Response.Status.BAD_REQUEST).entity("User already exists").build();
         }
 

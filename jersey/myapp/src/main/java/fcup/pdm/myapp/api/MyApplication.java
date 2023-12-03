@@ -12,7 +12,6 @@ public class MyApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
-        classes.add(GreetingResource.class);
         classes.add(RegisterResource.class);
         classes.add(LoginResource.class);
         classes.add(FavGenreResource.class);

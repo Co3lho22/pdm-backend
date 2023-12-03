@@ -81,10 +81,13 @@ public class UserDAO {
         return false;
     }
 
-    public boolean userExists(String username) {
+    public boolean userExists(User user) {
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM USERS WHERE username = ?")){
-            ps.setString(1, username);
+             PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM USERS " +
+                     "WHERE username = ? OR email = ?")){
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
