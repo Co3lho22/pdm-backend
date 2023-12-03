@@ -18,6 +18,8 @@
         <auth.version>4.4.0</auth.version>
         <zaxxer.version>5.1.0</zaxxer.version>
         <slf4j.version>2.0.5</slf4j.version>
+        <jakarta.version>4.0.1</jakarta.version>
+        <jaxb.version>4.0.4</jaxb.version>
     </properties>
 
     <dependencies>
@@ -120,6 +122,18 @@
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>${auth.version}</version>
+        </dependency>
+
+        <!-- JAXB API and Implementation -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakarta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb.version}</version>
         </dependency>
     </dependencies>
 
