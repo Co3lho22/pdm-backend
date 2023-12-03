@@ -203,9 +203,15 @@ public class AdminDAO {
             connection = DBConnection.getConnection();
             connection.setAutoCommit(false);
 
-            // Delete user favorites
-            String deleteFavoritesQuery = "DELETE FROM USER_FAVORITES WHERE user_id = ?";
-            ps = connection.prepareStatement(deleteFavoritesQuery);
+            // Delete user favorites movies
+            String deleteFavoritesMoviesQuery = "DELETE FROM USER_FAVORITES_MOVIES WHERE user_id = ?";
+            ps = connection.prepareStatement(deleteFavoritesMoviesQuery);
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+
+            // Delete user favorites genres
+            String deleteFavoritesGenresQuery = "DELETE FROM USER_FAVORITES_GENRES WHERE user_id = ?";
+            ps = connection.prepareStatement(deleteFavoritesGenresQuery);
             ps.setInt(1, userId);
             ps.executeUpdate();
 
