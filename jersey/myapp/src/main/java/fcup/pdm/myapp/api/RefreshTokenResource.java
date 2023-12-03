@@ -18,7 +18,7 @@ import java.util.List;
 
 @Path("/refresh")
 public class RefreshTokenResource {
-    private static final Logger logger = LogManager.getLogger(RegisterResource.class);
+    private static final Logger logger = LogManager.getLogger(RefreshTokenResource.class);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -26,35 +26,31 @@ public class RefreshTokenResource {
     public Response refreshToken(TokenRequest request) {
         String refreshToken = request.getRefreshToken();
 
-        // Validate the refresh token
         UserAuthDAO userAuthDAO = new UserAuthDAO();
 
-
-        try{
+        try {
             if (!userAuthDAO.isRefreshTokenValid(refreshToken)) {
+                logger.warn("Invalid refresh token for token: {}", refreshToken);
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid refresh token").build();
             }
-            // Extract username from the refresh token
-            String username = JwtUtil.getUsernameFromToken(refreshToken);
 
-            // Generate a new access token
+            String username = JwtUtil.getUsernameFromToken(refreshToken);
+            logger.info("Username extracted from refresh token: {}", username);
+
             List<String> roles = new ArrayList<>();
             roles.add(AppConstants.ROLE_USER);
             String newAccessToken = JwtUtil.generateToken(username, roles);
 
-            // Optionally, generate a new refresh token
             String newRefreshToken = JwtUtil.generateRefreshToken(username, roles);
 
-            // Update the refresh token in the database
             userAuthDAO.updateRefreshToken(username, newRefreshToken);
+            logger.info("Refresh token updated in the database for user: {}", username);
 
-            // Return the new tokens
+            logger.info("New access and refresh tokens generated for user: {}", username);
             return Response.ok().entity("{\"accessToken\":\"" + newAccessToken + "\", \"refreshToken\":\"" + newRefreshToken + "\"}").build();
-        } catch (Exception e){
-            logger.warn(e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when tried " +
-                    "to get a new token").build();
+        } catch (Exception e) {
+            logger.error("Error occurred while refreshing token for user: {}", refreshToken, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when tried to get a new token").build();
         }
-
     }
 }

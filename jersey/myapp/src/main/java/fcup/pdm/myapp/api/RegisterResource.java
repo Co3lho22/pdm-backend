@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.ws.rs.POST;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
@@ -25,8 +24,6 @@ public class RegisterResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
 
-        // logger.debug("Attempting to register user: " + user.getUsername());
-
         UserDAO userDao = new UserDAO();
         user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
 
@@ -36,11 +33,9 @@ public class RegisterResource {
 
         try {
             if (userDao.addUser(user)) {
-                // Registration successful
                 logger.info("Registration successful for user: " + user.getUsername());
                 return Response.ok().entity("Registration Successful").build();
             } else {
-                // Registration failed
                 logger.info("Registration successful for user: " + user.getUsername());
                 return Response.status(Response.Status.BAD_REQUEST).entity("Registration Failed").build();
             }

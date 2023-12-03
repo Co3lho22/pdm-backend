@@ -22,7 +22,7 @@ import java.util.List;
 
 @Path("/login")
 public class LoginResource {
-    private static final Logger logger = LogManager.getLogger(RegisterResource.class);
+    private static final Logger logger = LogManager.getLogger(LoginResource.class);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -32,25 +32,25 @@ public class LoginResource {
         User foundUser = userDao.getUserByUsername(user.getUsername());
         try{
             if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
-                // Login successful
+
                 List<String> roles = new ArrayList<>();
                 roles.add(AppConstants.ROLE_USER);
 
                 String accessToken = JwtUtil.generateToken(user.getUsername(), roles);
                 String refreshToken = JwtUtil.generateRefreshToken(user.getUsername(), roles);
 
-                // Store the refresh token in the database
                 UserAuthDAO userAuthDAO = new UserAuthDAO();
                 userAuthDAO.storeRefreshToken(foundUser.getId(), refreshToken);
 
-                // Return both the access token and the refresh token
+                logger.info("Login successful for user: {}", user.getUsername());
+
                 return Response.ok().entity("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}").build();
             } else {
-                // Login failed
+                logger.warn("Login failed for user: {}", user.getUsername());
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
             }
         } catch (Exception e){
-            logger.warn(e);
+            logger.error("Error verifying login for user: {}", user.getUsername(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when " +
                     "tried to verify the login").build();
         }
