@@ -12,7 +12,7 @@
         <java.version>11</java.version>
         <jetty.version>11.0.18</jetty.version>
         <jersey.version>3.0.4</jersey.version>
-        <log4j.version>2.21.1</log4j.version>
+        <log4j.version>3.0.0-alpha1</log4j.version>
         <jbcrypt.version>0.4</jbcrypt.version>
         <mariadb.version>3.3.0</mariadb.version>
         <auth.version>4.4.0</auth.version>
