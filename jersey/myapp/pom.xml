@@ -12,12 +12,12 @@
         <java.version>11</java.version>
         <jetty.version>11.0.18</jetty.version>
         <jersey.version>3.0.4</jersey.version>
-        <log4j.version>3.0.0-alpha1</log4j.version>
+        <log4j.version>3.0.0-alpha1</log4j.version> <!-- Consider using a stable version -->
         <jbcrypt.version>0.4</jbcrypt.version>
         <mariadb.version>3.3.0</mariadb.version>
         <auth.version>4.4.0</auth.version>
         <zaxxer.version>5.1.0</zaxxer.version>
-
+        <slf4j.version>2.0.5</slf4j.version>
     </properties>
 
     <dependencies>
@@ -60,7 +60,6 @@
             <version>${jersey.version}</version>
         </dependency>
 
-
         <!-- Jakarta Servlet API -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -69,31 +68,40 @@
             <scope>provided</scope>
         </dependency>
 
-	<!-- Logs-->
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- Log4j2 dependencies -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-	    <version>${log4j.version}</version>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <!-- Log4j2 SLF4J Binding for SLF4J 2.0.x -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${log4j.version}</version>
         </dependency>
 
-        <!-- jbcrypt  -->
+        <!-- jbcrypt -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
-	        <version>${jbcrypt.version}</version>
+            <version>${jbcrypt.version}</version>
         </dependency>
 
-        <!-- mariadb  -->
+        <!-- mariadb -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
@@ -107,14 +115,12 @@
             <version>${zaxxer.version}</version>
         </dependency>
 
-        <!-- Auth  -->
+        <!-- Auth -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>${auth.version}</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -131,4 +137,3 @@
         </plugins>
     </build>
 </project>
-
