@@ -1,117 +1,240 @@
-API Endpoints
+API Endpoints Documentation
 1. Favorite Movies and Genres
-   Add Favorite Movies
+ 
+Add Favorite Movies
 
-   Endpoint: /favorite/movies/{userId}
-   Method: POST
-   Consumes: application/json
-   Produces: application/json
-   Description: Adds a list of favorite movies for a specified user.
-   Parameters:
-   userId (path parameter): User's ID.
-   movieIds (request body): List of movie IDs to add to favorites.
+    Endpoint: /favorite/movies/{userId}
+    Method: POST
+
+Example Request (json):
+
+    POST /favorite/movies/123
+    Content-Type: application/json
+    
+    [1, 2, 3]
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    "Favorite movies added successfully"
 
 Get Favorite Movies
 
     Endpoint: /favorite/movies/{userId}
     Method: GET
-    Produces: application/json
-    Description: Retrieves a list of favorite movies for a specified user.
-    Parameters:
-        userId (path parameter): User's ID.
+
+Example Request:
+
+    GET /favorite/movies/123
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    [1, 2, 3]
 
 Remove Favorite Movies
 
     Endpoint: /favorite/movies/{userId}
     Method: DELETE
-    Consumes: application/json
-    Produces: application/json
-    Description: Removes a list of favorite movies for a specified user.
-    Parameters:
-        userId (path parameter): User's ID.
-        movieIds (request body): List of movie IDs to remove from favorites.
+
+Example Request (json):
+
+    DELETE /favorite/movies/123
+    Content-Type: application/json
+    
+    [1, 2]
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    "Favorite movies removed successfully"
 
 Add Favorite Genres
 
     Endpoint: /favorite/genres/{userId}
     Method: POST
-    Consumes: application/json
-    Produces: application/json
-    Description: Adds a list of favorite genres for a specified user.
-    Parameters:
-        userId (path parameter): User's ID.
-        genreIds (request body): List of genre IDs to add to favorites.
+
+Example Request:
+
+    POST /favorite/genres/123
+    Content-Type: application/json
+    
+    [4, 5]
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    "Favorite genres added successfully"
 
 Get Favorite Genres
 
     Endpoint: /favorite/genres/{userId}
     Method: GET
-    Produces: application/json
-    Description: Retrieves a list of favorite genres for a specified user.
-    Parameters:
-        userId (path parameter): User's ID.
+
+Example Request:
+
+    GET /favorite/genres/123
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    [4, 5]
 
 Remove Favorite Genres
 
     Endpoint: /favorite/genres/{userId}
     Method: DELETE
-    Consumes: application/json
-    Produces: application/json
-    Description: Removes a list of favorite genres for a specified user.
-    Parameters:
-        userId (path parameter): User's ID.
-        genreIds (request body): List of genre IDs to remove from favorites.
+
+Example Request(json):
+
+
+    DELETE /favorite/genres/123
+    Content-Type: application/json
+
+    [4]
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    "Favorite genres removed successfully"
 
 2. User Authentication
-   User Login
+   
+User Login
 
-   Endpoint: /login
-   Method: POST
-   Consumes: application/json
-   Produces: application/json
-   Description: Verifies user login credentials and provides access and refresh tokens.
-   Parameters:
-   user (request body): User object containing username and password.
+        Endpoint: /login 
+        Method: POST
+
+Example Request (json):
+
+
+    POST /login
+    Content-Type: application/json
+    
+    {
+    "username": "john_doe",
+    "password": "password123"
+    }
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
 
 User Registration
 
     Endpoint: /register
     Method: POST
-    Consumes: application/json
-    Produces: application/json
-    Description: Registers a new user.
-    Parameters:
-        user (request body): User object containing user details.
+
+Example Request (json):
+
+
+    POST /register
+    Content-Type: application/json
+    
+    {
+    "username": "new_user",
+    "password": "newpassword",
+    "email": "newuser@example.com"
+    }
+
+Example Response (json):
+
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    "Registration Successful"
 
 Refresh Token
 
     Endpoint: /refresh
     Method: POST
-    Consumes: application/json
-    Produces: application/json
-    Description: Refreshes the access token using a valid refresh token.
-    Parameters:
-        request (request body): TokenRequest object containing the refresh token.
+
+Example Request (json):
+
+    POST /refresh
+    Content-Type: application/json
+    
+    {
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
 
 3. Movie Information
-   Get Movie by ID
+   
+Get Movie by ID
 
-   Endpoint: /movie/{id}
-   Method: GET
-   Produces: application/json
-   Description: Retrieves movie details by movie ID.
-   Parameters:
-   id (path parameter): Movie's ID.
+    Endpoint: /movie/{id}
+    Method: GET 
+
+Example Request:
+
+    GET /movie/456
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "id": 456,
+      "title": "Movie Title",
+      "description": "Description of the movie...",
+      // Other movie details
+    }
 
 Get Movies
 
     Endpoint: /movie
     Method: GET
-    Produces: application/json
-    Description: Retrieves a list of movies based on various filters.
-    Parameters:
-        minRating (query parameter): Minimum rating filter.
-        maxRating (query parameter): Maximum rating filter.
-        startDate (query parameter): Start date filter.
-        endDate (query parameter): End date filter.
-        limit (query parameter): Limit on the number of movies to retrieve.
+
+Example Request:
+
+    GET /movie?minRating=4.5&maxRating=5&startDate=2023-01-01&endDate=2023-12-31&limit=10
+
+Example Response (json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    [
+      {
+        "id": 123,
+        "title": "Movie 1",
+        // Other details
+      },
+      {
+        "id": 124,
+        "title": "Movie 2",
+        // Other details
+      }
+      // More movies
+    ]
+
