@@ -11,9 +11,19 @@ import fcup.pdm.myapp.model.Role;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The RoleDAO class provides methods to interact with the database for role-related operations.
+ * It handles retrieving a list of roles associated with a specific user.
+ */
 public class RoleDAO {
     private static final Logger logger = LogManager.getLogger(RoleDAO.class);
 
+    /**
+     * Retrieves a list of roles associated with a specific user from the database.
+     *
+     * @param userId The ID of the user to retrieve roles for.
+     * @return A list of Role objects representing the roles associated with the user.
+     */
     public List<Role> getRolesByUserId(int userId) {
         List<Role> roles = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection();

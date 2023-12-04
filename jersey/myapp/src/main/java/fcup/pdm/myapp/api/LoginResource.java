@@ -19,11 +19,19 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class defines a RESTful web service for user login and authentication.
+ */
 @Path("/login")
 public class LoginResource {
     private static final Logger logger = LogManager.getLogger(LoginResource.class);
 
+    /**
+     * Verifies user login credentials and generates access and refresh tokens upon successful login.
+     *
+     * @param user The user object containing username and password for login.
+     * @return A response containing access and refresh tokens upon successful login or an error message for failed login.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

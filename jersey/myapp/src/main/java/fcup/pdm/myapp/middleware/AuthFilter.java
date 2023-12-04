@@ -9,10 +9,20 @@ import java.net.URI;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+/**
+ * The AuthFilter class is a middleware filter responsible for handling authentication and authorization for incoming
+ * HTTP requests. It checks the authorization header in the request and validates the provided token.
+ */
 @Provider
 public class AuthFilter implements ContainerRequestFilter {
     private static final Logger logger = LogManager.getLogger(AuthFilter.class);
 
+    /**
+     * Filters incoming HTTP requests and performs authentication and authorization checks.
+     *
+     * @param requestContext The container request context containing information about the incoming request.
+     */
     @Override
     public void filter(ContainerRequestContext requestContext) {
         URI requestUri = requestContext.getUriInfo().getRequestUri();

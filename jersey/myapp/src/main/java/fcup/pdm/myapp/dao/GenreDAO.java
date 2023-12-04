@@ -10,9 +10,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
+/**
+ * The GenreDAO class provides methods to interact with the database for genre-related operations.
+ * It handles retrieving genre information, verifying genre existence, and fetching genres associated with movies.
+ */
 public class GenreDAO {
     private static final Logger logger = LogManager.getLogger(GenreDAO.class);
 
+    /**
+     * Retrieves a list of all genres from the database.
+     *
+     * @return A list of Genre objects representing all genres.
+     */
     public List<Genre> getAllGenres() {
         List<Genre> genres = new ArrayList<>();
         String query = "SELECT * FROM GENRES";
@@ -34,6 +43,12 @@ public class GenreDAO {
         return genres;
     }
 
+    /**
+     * Verifies if a genre with the given ID and name exists in the database.
+     *
+     * @param genre The Genre object to verify.
+     * @return True if the genre exists; otherwise, false.
+     */
     public boolean verifyGenreExists(Genre genre){
         String query = "SELECT * FROM GENRES WHERE id = ? AND name = ?";
         try (Connection connection = DBConnection.getConnection();
@@ -52,6 +67,12 @@ public class GenreDAO {
         return false;
     }
 
+    /**
+     * Retrieves the name of a genre by its ID.
+     *
+     * @param id The ID of the genre.
+     * @return The name of the genre, or null if not found.
+     */
     public String getGenreNameById(int id){
         String name = null;
 
@@ -73,6 +94,12 @@ public class GenreDAO {
         return name;
     }
 
+    /**
+     * Retrieves genres for a list of movie IDs.
+     *
+     * @param movieIds A list of movie IDs.
+     * @return A map where keys are movie IDs, and values are lists of genre names associated with each movie.
+     */
     public Map<Integer, List<String>> getGenresForMoviesId(List<Integer> movieIds) {
         Map<Integer, List<String>> movieGenresMap = new HashMap<>();
         if (movieIds == null || movieIds.isEmpty()) {

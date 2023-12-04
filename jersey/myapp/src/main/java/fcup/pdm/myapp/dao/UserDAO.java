@@ -11,9 +11,19 @@ import fcup.pdm.myapp.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The UserDAO class provides methods to interact with the database for user-related operations.
+ * It handles retrieving user information, user existence checks, adding users, removing users, and managing user roles.
+ */
 public class UserDAO {
     private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
+    /**
+     * Retrieves a user by their username from the database.
+     *
+     * @param username The username of the user to retrieve.
+     * @return The User object representing the retrieved user or null if not found.
+     */
     public User getUserByUsername(String username) {
         User user = null;
         try (Connection connection = DBConnection.getConnection();
@@ -37,6 +47,13 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Retrieves a user by their username and hashed password from the database.
+     *
+     * @param username       The username of the user to retrieve.
+     * @param hashedPassword The hashed password of the user.
+     * @return The User object representing the retrieved user or null if not found.
+     */
     public User getUserByUsernameAndPassword(String username, String hashedPassword) {
         User user = null;
         try (Connection connection = DBConnection.getConnection();
@@ -62,6 +79,12 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Retrieves the user ID by username from the database.
+     *
+     * @param username The username of the user to retrieve the ID for.
+     * @return The user ID or -1 if not found.
+     */
     public int getUserIDByUsername(String username) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT id FROM USERS WHERE username = ?")){
@@ -77,6 +100,12 @@ public class UserDAO {
         return -1;
     }
 
+    /**
+     * Removes a user by their username from the database.
+     *
+     * @param username The username of the user to remove.
+     * @return true if the user is removed successfully; false otherwise.
+     */
     public boolean removeUserByUsername(String username) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("DELETE FROM USERS WHERE username = ?")) {
@@ -94,6 +123,12 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Checks if a user already exists in the database by username or email.
+     *
+     * @param user The User object to check for existence.
+     * @return true if the user exists; false otherwise.
+     */
     public boolean userExists(User user) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM USERS " +
@@ -116,6 +151,12 @@ public class UserDAO {
         return false;
     }
 
+    /**
+     * Adds user permissions to a user in the database.
+     *
+     * @param user The User object to add permissions for.
+     * @return true if permissions are added successfully; false otherwise.
+     */
     public boolean addUserPerms(User user) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("INSERT INTO USER_ROLE (user_id, role_id) " +
@@ -134,7 +175,12 @@ public class UserDAO {
         return false;
     }
 
-
+    /**
+     * Adds a new user to the database.
+     *
+     * @param user The User object representing the user to add.
+     * @return true if the user is added successfully; false otherwise.
+     */
     public boolean addUser(User user) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("INSERT INTO USERS " +
@@ -167,6 +213,12 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Retrieves the roles associated with a user from the database.
+     *
+     * @param userId The ID of the user to retrieve roles for.
+     * @return A list of role names associated with the user.
+     */
     public List<String> getUserRoles(int userId) {
         List<String> roles = new ArrayList<>();
 

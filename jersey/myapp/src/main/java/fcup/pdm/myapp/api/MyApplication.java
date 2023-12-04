@@ -6,9 +6,17 @@ import jakarta.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class configures the Jakarta EE application for the RESTful web service.
+ */
 @ApplicationPath("/*")
 public class MyApplication extends Application {
-    
+
+    /**
+     * Get a set of resource classes to be used by the Jakarta EE application.
+     *
+     * @return A set of resource classes.
+     */
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();

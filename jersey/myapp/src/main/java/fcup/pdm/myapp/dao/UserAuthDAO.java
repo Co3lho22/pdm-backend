@@ -9,10 +9,19 @@ import fcup.pdm.myapp.util.JwtUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The UserAuthDAO class provides methods to interact with the database for user authentication-related operations.
+ * It handles validating refresh tokens, updating refresh tokens, and storing refresh tokens for users.
+ */
 public class UserAuthDAO {
     private static final Logger logger = LogManager.getLogger(UserAuthDAO.class);
 
-
+    /**
+     * Checks if a given refresh token is valid in the database.
+     *
+     * @param refreshToken The refresh token to validate.
+     * @return true if the refresh token is valid; false otherwise.
+     */
     public boolean isRefreshTokenValid(String refreshToken) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT * FROM USER_AUTH WHERE refresh_token = ?")){
@@ -35,6 +44,13 @@ public class UserAuthDAO {
         return false;
     }
 
+    /**
+     * Updates the refresh token associated with a user in the database.
+     *
+     * @param username       The username of the user.
+     * @param newRefreshToken The new refresh token to update.
+     * @return true if the refresh token is updated successfully; false otherwise.
+     */
     public boolean updateRefreshToken(String username, String newRefreshToken) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("UPDATE USER_AUTH SET refresh_token = ? WHERE " +
@@ -50,7 +66,14 @@ public class UserAuthDAO {
             return false;
         }
     }
-    
+
+    /**
+     * Stores a refresh token for a user in the database or updates it if it already exists.
+     *
+     * @param userId        The ID of the user.
+     * @param refreshToken  The refresh token to store or update.
+     * @return true if the refresh token is stored or updated successfully; false otherwise.
+     */
     public boolean storeRefreshToken(int userId, String refreshToken) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement( "INSERT INTO USER_AUTH (user_id, refresh_token) " +

@@ -9,9 +9,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+/**
+ * The RBACUtil class provides methods for Role-Based Access Control (RBAC) checks.
+ */
 public class RBACUtil {
     private static final Logger logger = LogManager.getLogger(RBACUtil.class);
 
+    /**
+     * Checks if a user has a specific permission.
+     *
+     * @param userId            The ID of the user to check.
+     * @param requiredPermission The required permission to check.
+     * @return True if the user has the required permission, false otherwise.
+     */
     public static boolean hasPermission(int userId, String requiredPermission) {
         RoleDAO roleDAO = new RoleDAO();
         PermissionDAO permissionDAO = new PermissionDAO();

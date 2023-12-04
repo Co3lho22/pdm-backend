@@ -11,8 +11,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The UserFavoritesDAO class provides methods to interact with the database for user favorites-related operations.
+ * It handles adding, retrieving, and removing favorite movies and genres for a user.
+ */
 public class UserFavoritesDAO {
     private static final Logger logger = LogManager.getLogger(UserFavoritesDAO.class);
+
+    /**
+     * Adds a list of favorite movies for a user in the database.
+     *
+     * @param userId   The ID of the user for whom to add favorite movies.
+     * @param movieIds The list of movie IDs to add as favorites for the user.
+     * @return true if the favorite movies are added successfully; false otherwise.
+     */
     public boolean addFavoriteMovies(int userId, List<Integer> movieIds) {
         String query = "INSERT INTO USER_FAVORITES_MOVIES (user_id, movie_id) VALUES (?, ?)";
         try (Connection connection = DBConnection.getConnection();
@@ -34,6 +46,12 @@ public class UserFavoritesDAO {
         }
     }
 
+    /**
+     * Retrieves a list of favorite movie IDs for a user from the database.
+     *
+     * @param userId The ID of the user for whom to retrieve favorite movies.
+     * @return A list of movie IDs that are favorites for the user.
+     */
     public List<Integer> getFavoriteMovies(int userId) {
         List<Integer> favoriteMovies = new ArrayList<>();
         String query = "SELECT movie_id FROM USER_FAVORITES_MOVIES WHERE user_id = ?";
@@ -55,6 +73,13 @@ public class UserFavoritesDAO {
         return favoriteMovies;
     }
 
+    /**
+     * Removes a list of favorite movies for a user from the database.
+     *
+     * @param userId   The ID of the user for whom to remove favorite movies.
+     * @param movieIds The list of movie IDs to remove as favorites for the user.
+     * @return true if the favorite movies are removed successfully; false otherwise.
+     */
     public boolean removeFavoriteMovies(int userId, List<Integer> movieIds) {
         String query = "DELETE FROM USER_FAVORITES_MOVIES WHERE user_id = ? AND movie_id = ?";
         try (Connection connection = DBConnection.getConnection();
@@ -76,6 +101,13 @@ public class UserFavoritesDAO {
         }
     }
 
+    /**
+     * Adds a list of favorite genres for a user in the database.
+     *
+     * @param userId   The ID of the user for whom to add favorite genres.
+     * @param genreIds The list of genre IDs to add as favorites for the user.
+     * @return true if the favorite genres are added successfully; false otherwise.
+     */
     public boolean addFavoriteGenres(int userId, List<Integer> genreIds) {
         String query = "INSERT INTO USER_FAVORITES_GENRES (user_id, genre_id) VALUES (?, ?)";
         try (Connection connection = DBConnection.getConnection();
@@ -96,6 +128,12 @@ public class UserFavoritesDAO {
         }
     }
 
+    /**
+     * Retrieves a list of favorite genre IDs for a user from the database.
+     *
+     * @param userId The ID of the user for whom to retrieve favorite genres.
+     * @return A list of genre IDs that are favorites for the user.
+     */
     public List<Integer> getFavoriteGenres(int userId) {
         List<Integer> favoriteMovies = new ArrayList<>();
         String query = "SELECT genre_id FROM USER_FAVORITES_GENRES WHERE user_id = ?";
@@ -117,6 +155,13 @@ public class UserFavoritesDAO {
         return favoriteMovies;
     }
 
+    /**
+     * Removes a list of favorite genres for a user from the database.
+     *
+     * @param userId   The ID of the user for whom to remove favorite genres.
+     * @param genreIds The list of genre IDs to remove as favorites for the user.
+     * @return true if the favorite genres are removed successfully; false otherwise.
+     */
     public boolean removeFavoriteGenres(int userId, List<Integer> genreIds) {
         String query = "DELETE FROM USER_FAVORITES_GENRES WHERE user_id = ? AND genres_id = ?";
         try (Connection connection = DBConnection.getConnection();
@@ -137,5 +182,7 @@ public class UserFavoritesDAO {
             return false;
         }
     }
+
+
 
 }

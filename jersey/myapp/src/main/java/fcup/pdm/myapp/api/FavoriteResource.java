@@ -9,11 +9,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+/**
+ * This class defines a RESTful web service for managing user favorite movies and genres.
+ */
 @Path("/favorite")
 public class FavoriteResource {
     private static final Logger logger = LogManager.getLogger(FavoriteResource.class);
     private UserFavoritesDAO userFavoritesDAO = new UserFavoritesDAO();
 
+    /**
+     * Adds favorite movies for a user.
+     *
+     * @param userId    The ID of the user for whom to add favorite movies.
+     * @param movieIds  A list of movie IDs to add as favorite movies for the user.
+     * @return          A response indicating the success or failure of the operation.
+     */
     @POST
     @Path("/movies/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,6 +44,12 @@ public class FavoriteResource {
         }
     }
 
+    /**
+     * Retrieves favorite movies for a user.
+     *
+     * @param userId    The ID of the user for whom to retrieve favorite movies.
+     * @return          A response containing a list of favorite movie IDs.
+     */
     @GET
     @Path("/movies/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,6 +64,13 @@ public class FavoriteResource {
         }
     }
 
+    /**
+     * Removes favorite movies for a user.
+     *
+     * @param userId    The ID of the user for whom to remove favorite movies.
+     * @param movieIds  A list of movie IDs to remove from the user's favorite movies.
+     * @return          A response indicating the success or failure of the operation.
+     */
     @DELETE
     @Path("/movies/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -68,6 +91,13 @@ public class FavoriteResource {
         }
     }
 
+    /**
+     * Adds favorite genres for a user.
+     *
+     * @param userId    The ID of the user for whom to add favorite genres.
+     * @param genreIds  A list of genre IDs to add as favorite genres for the user.
+     * @return          A response indicating the success or failure of the operation.
+     */
     @POST
     @Path("/genres/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -88,6 +118,12 @@ public class FavoriteResource {
         }
     }
 
+    /**
+     * Retrieves favorite genres for a user.
+     *
+     * @param userId    The ID of the user for whom to retrieve favorite genres.
+     * @return          A response containing a list of favorite genre IDs.
+     */
     @GET
     @Path("/genres/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,6 +138,13 @@ public class FavoriteResource {
         }
     }
 
+    /**
+     * Removes favorite genres for a user.
+     *
+     * @param userId    The ID of the user for whom to remove favorite genres.
+     * @param genreIds  A list of genre IDs to remove from the user's favorite genres.
+     * @return          A response indicating the success or failure of the operation.
+     */
     @DELETE
     @Path("/genres/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)

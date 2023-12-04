@@ -1,5 +1,8 @@
 package fcup.pdm.myapp.util;
 
+/**
+ * The AppConstants class contains constant values related to roles and permissions in the application.
+ */
 public class AppConstants {
     // Roles
     public static final String ROLE_ADMIN = "admin";

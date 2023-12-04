@@ -16,10 +16,19 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class defines a RESTful web service for refreshing access tokens using a refresh token.
+ */
 @Path("/refresh")
 public class RefreshTokenResource {
     private static final Logger logger = LogManager.getLogger(RefreshTokenResource.class);
 
+    /**
+     * Refreshes an access token using a valid refresh token.
+     *
+     * @param request The token request containing the refresh token.
+     * @return A response containing a new access token and refresh token if the refresh token is valid.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

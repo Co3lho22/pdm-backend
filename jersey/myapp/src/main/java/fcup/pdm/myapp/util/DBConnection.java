@@ -9,11 +9,15 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.Properties;
 
+/**
+ * The DBConnection class manages database connections using HikariCP connection pooling.
+ */
 public class DBConnection {
 
     private static HikariDataSource dataSource;
     private static final Logger logger = LogManager.getLogger(DBConnection.class);
 
+    // Static initialization block to configure the database connection pool.
     static {
         try {
             Properties props = new Properties();
@@ -32,6 +36,13 @@ public class DBConnection {
         }
     }
 
+
+    /**
+     * Get a database connection from the connection pool.
+     *
+     * @return A database connection.
+     * @throws Exception If an error occurs while acquiring a connection.
+     */
     public static Connection getConnection() throws Exception {
         try {
             Connection connection = dataSource.getConnection();

@@ -11,10 +11,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class provides data access methods for administrative operations.
+ */
 public class AdminDAO {
     private static final Logger logger = LogManager.getLogger(AdminDAO.class);
 
-
+    /**
+     * Adds a new movie and links it to a genre.
+     *
+     * @param movie   The movie object to be added.
+     * @param genreId The ID of the genre to link the movie to.
+     * @return True if the movie was added and linked successfully; otherwise, false.
+     */
     public boolean addMovie(Movie movie, int genreId) {
         Connection connection = null;
         PreparedStatement ps = null;
@@ -73,6 +82,12 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Updates movie information.
+     *
+     * @param movie The updated movie object.
+     * @return True if the movie was updated successfully; otherwise, false.
+     */
     public boolean updateMovie(Movie movie) {
         String query = "UPDATE MOVIES SET title = ?, duration = ?, " +
                 "rating = ?, release_date = ?, description = ? WHERE id = ?";
@@ -97,6 +112,12 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Deletes a movie by its ID and unlinks it from genres.
+     *
+     * @param movieId The ID of the movie to delete.
+     * @return True if the movie was deleted successfully; otherwise, false.
+     */
     public boolean deleteMovie(int movieId) {
         Connection connection = null;
         PreparedStatement ps = null;
@@ -137,6 +158,12 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Adds a new genre to the database.
+     *
+     * @param genreName The name of the genre to be added.
+     * @return True if the genre was added successfully; otherwise, false.
+     */
     public boolean addGenre(String genreName) {
         String query = "INSERT INTO GENRES (name) VALUES (?)";
         try (Connection connection = DBConnection.getConnection();
@@ -153,6 +180,12 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Removes a genre from the database by its ID.
+     *
+     * @param genreId The ID of the genre to be removed.
+     * @return True if the genre was removed successfully; otherwise, false.
+     */
     public boolean removeGenre(int genreId) {
         String query = "DELETE FROM GENRES WHERE id = ?";
         try (Connection connection = DBConnection.getConnection();
@@ -169,6 +202,13 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Links a movie with a genre in the database.
+     *
+     * @param movieId The ID of the movie to be linked.
+     * @param genreId The ID of the genre to link the movie to.
+     * @return True if the movie was linked to the genre successfully; otherwise, false.
+     */
     private boolean linkMovieWithGenre(int movieId, int genreId) {
         String query = "INSERT INTO MOVIE_GENRES (movie_id, genre_id) VALUES (?, ?)";
         try (Connection connection = DBConnection.getConnection();
@@ -186,6 +226,13 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Unlinks a movie from a genre in the database.
+     *
+     * @param movieId The ID of the movie to be unlinked.
+     * @param genreId The ID of the genre to unlink the movie from.
+     * @return True if the movie was unlinked from the genre successfully; otherwise, false.
+     */
     private boolean unlinkMovieFromGenre(int movieId, int genreId) {
         String query = "DELETE FROM MOVIE_GENRES WHERE movie_id = ? AND genre_id = ?";
         try (Connection connection = DBConnection.getConnection();
@@ -203,6 +250,12 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Removes a user from the database by their ID and deletes related data.
+     *
+     * @param userId The ID of the user to be removed.
+     * @return True if the user was removed successfully; otherwise, false.
+     */
     public boolean removeUser(int userId) {
         Connection connection = null;
         PreparedStatement ps = null;
@@ -254,6 +307,12 @@ public class AdminDAO {
         }
     }
 
+    /**
+     * Closes the prepared statement and database connection.
+     *
+     * @param ps         The prepared statement to close.
+     * @param connection The database connection to close.
+     */
     private void closeResources(PreparedStatement ps, Connection connection) {
         if (ps != null) {
             try {

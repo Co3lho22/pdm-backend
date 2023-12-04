@@ -11,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The JwtUtil class provides methods for generating and verifying JSON Web Tokens (JWTs).
+ */
 public class JwtUtil {
 
     private static final Logger logger = LogManager.getLogger(JwtUtil.class);
@@ -18,6 +21,13 @@ public class JwtUtil {
     private static final long EXPIRATION_TIME = 900_000; // 15 minutes in milliseconds
     private static final long REFRESH_TOKEN_VALIDITY = 604800000; // 7 days in milliseconds
 
+    /**
+     * Generates a JWT token for the given username and roles.
+     *
+     * @param username The username to include in the token.
+     * @param roles    The roles to include in the token.
+     * @return The generated JWT token.
+     */
     public static String generateToken(String username, List<String> roles) {
         String token = JWT.create()
                 .withSubject(username)
@@ -29,6 +39,13 @@ public class JwtUtil {
         return token;
     }
 
+    /**
+     * Extracts the username from a JWT token.
+     *
+     * @param token The JWT token to extract the username from.
+     * @return The username extracted from the token.
+     * @throws JWTVerificationException If the token cannot be verified.
+     */
     public static String getUsernameFromToken(String token) {
         try {
             DecodedJWT jwt = JWT.require(Algorithm.HMAC512(SECRET_KEY))
@@ -42,6 +59,13 @@ public class JwtUtil {
         }
     }
 
+    /**
+     * Generates a refresh token for the given username and roles.
+     *
+     * @param username The username to include in the refresh token.
+     * @param roles    The roles to include in the refresh token.
+     * @return The generated refresh token.
+     */
     public static String generateRefreshToken(String username, List<String> roles) {
         String refreshToken = JWT.create()
                 .withSubject(username)
@@ -52,6 +76,13 @@ public class JwtUtil {
         return refreshToken;
     }
 
+    /**
+     * Verifies a JWT token and returns the username if the token is valid.
+     *
+     * @param token The JWT token to verify.
+     * @return The username extracted from the token.
+     * @throws JWTVerificationException If the token cannot be verified.
+     */
     public static String verifyToken(String token) throws JWTVerificationException {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC512(SECRET_KEY))

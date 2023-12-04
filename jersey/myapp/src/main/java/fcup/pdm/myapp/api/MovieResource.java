@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class defines a RESTful web service for managing movies.
+ */
 @Path("/movie")
 public class MovieResource {
 
@@ -53,6 +56,12 @@ public class MovieResource {
 //        }
 //    }
 
+    /**
+     * Retrieves a movie by its ID.
+     *
+     * @param id The ID of the movie to retrieve.
+     * @return A response containing the movie if found or a "not found" response if the movie does not exist.
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +82,16 @@ public class MovieResource {
         }
     }
 
+    /**
+     * Retrieves a list of movies based on optional query parameters.
+     *
+     * @param minRating   The minimum movie rating.
+     * @param maxRating   The maximum movie rating.
+     * @param startDate   The start date for filtering by release date.
+     * @param endDate     The end date for filtering by release date.
+     * @param limit       The maximum number of movies to retrieve.
+     * @return A response containing a list of movies that match the provided criteria.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMovies(@QueryParam("minRating") Float minRating,

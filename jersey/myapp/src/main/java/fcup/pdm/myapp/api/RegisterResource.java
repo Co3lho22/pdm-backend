@@ -14,11 +14,19 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-
+/**
+ * This class defines a RESTful web service for user registration.
+ */
 @Path("/register")
 public class RegisterResource {
     private static final Logger logger = LogManager.getLogger(RegisterResource.class);
 
+    /**
+     * Registers a new user with the provided user information.
+     *
+     * @param user The user object containing registration details.
+     * @return A response indicating whether the registration was successful or failed.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
