@@ -62,10 +62,10 @@ public class UserAuthDAO {
 
             int rowsAffected = ps.executeUpdate();
 
-            logger.info("Stored the refresh token successfully with refresh token: {}", refreshToken);
+            logger.info("Stored the refresh token successfully with refresh token");
             return rowsAffected > 0;
         } catch (Exception e) {
-            logger.error("Error storing the refresh token with refresh token: {}", refreshToken, e);
+            logger.error("Error storing the refresh token with refresh token", e);
             return false;
         }
     }
