@@ -8,8 +8,11 @@ import java.util.List;
 
 import fcup.pdm.myapp.util.DBConnection;
 import fcup.pdm.myapp.model.Role;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RoleDAO {
+    private static final Logger logger = LogManager.getLogger(RoleDAO.class);
 
     public List<Role> getRolesByUserId(int userId) {
         List<Role> roles = new ArrayList<>();
@@ -26,8 +29,9 @@ public class RoleDAO {
                 roles.add(role);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving roles by userId with userId: {}", userId, e);
         }
+        logger.info("Got roles by userId successfully with userId: {}", userId);
         return roles;
     }
 }

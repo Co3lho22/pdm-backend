@@ -13,7 +13,7 @@ package fcup.pdm.myapp.dao;
         import org.apache.logging.log4j.Logger;
 
 public class PermissionDAO {
-    private static final Logger logger = LogManager.getLogger(RegisterResource.class);
+    private static final Logger logger = LogManager.getLogger(PermissionDAO.class);
 
     public List<Permission> getPermissionsByRoleId(int roleId) {
         List<Permission> permissions = new ArrayList<>();
@@ -30,8 +30,9 @@ public class PermissionDAO {
                 permissions.add(permission);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error getting permission by roleId with roleId: {}", roleId, e);
         }
+        logger.info("Got permission by roleId successfully with roleId: {}", roleId);
         return permissions;
     }
 }

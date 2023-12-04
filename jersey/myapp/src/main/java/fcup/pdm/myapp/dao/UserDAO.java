@@ -8,8 +8,11 @@ import java.util.List;
 
 import fcup.pdm.myapp.util.DBConnection;
 import fcup.pdm.myapp.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserDAO {
+    private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
     public User getUserByUsername(String username) {
         User user = null;
@@ -27,8 +30,10 @@ public class UserDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving user by userName with userName: {}", username, e);
         }
+
+        logger.info("Got user by userName successfully with userName: {}", username);
         return user;
     }
 
@@ -49,8 +54,11 @@ public class UserDAO {
                 return user;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving user by username and password " +
+                    "with userName: {} | and hashedPassword: {}", username, hashedPassword, e);
         }
+        logger.info("Got user by userName and password successfully " +
+                "with userName: {} | and hashedPassword: {}", username, hashedPassword);
         return user;
     }
 
@@ -60,23 +68,28 @@ public class UserDAO {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                logger.info("User ID retrieved for username: {}", username);
                 return Integer.parseInt(rs.getString("id"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving user ID by username: {}", username, e);
         }
         return -1;
     }
 
     public boolean removeUserByUsername(String username) {
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement("DELETE FROM USERS WHERE username = ?")){
+             PreparedStatement ps = connection.prepareStatement("DELETE FROM USERS WHERE username = ?")) {
             ps.setString(1, username);
-
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                logger.info("User removed successfully with username: {}", username);
+                return true;
+            } else {
+                logger.warn("No user found to remove with username: {}", username);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error removing user by username: {}", username, e);
         }
         return false;
     }
@@ -91,28 +104,36 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                boolean exists = rs.getInt(1) > 0;
+                logger.info("User existence check for username: {} | " +
+                        "email: {} | exists: {}", user.getUsername(), user.getEmail(), exists);
+                return exists;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error checking user existence for username: {} " +
+                    "| email: {}", user.getUsername(), user.getEmail(), e);
         }
         return false;
     }
 
     public boolean addUserPerms(User user) {
-        try(Connection connection = DBConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO USER_ROLE (user_id, role_id) " +
-                    "VALUES (?, (SELECT id FROM ROLE WHERE name = 'user'))")){
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("INSERT INTO USER_ROLE (user_id, role_id) " +
+                     "VALUES (?, (SELECT id FROM ROLE WHERE name = 'user'))")) {
             ps.setLong(1, user.getId());
-
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
+            if (rowsAffected > 0) {
+                logger.info("User permissions added for user ID: {}", user.getId());
+                return true;
+            } else {
+                logger.warn("Failed to add user permissions for user ID: {}", user.getId());
+            }
+        } catch (Exception e) {
+            logger.error("Error adding user permissions for user ID: {}", user.getId(), e);
         }
+        return false;
     }
+
 
     public boolean addUser(User user) {
         try (Connection connection = DBConnection.getConnection();
@@ -134,12 +155,14 @@ public class UserDAO {
             }
 
             if(rowsAffected > 0){
+                logger.info("User added successfully with username: {}", user.getUsername());
                 return addUserPerms(user);
             }else{
+                logger.warn("Failed to add user with username: {}", user.getUsername());
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error adding user with username: {}", user.getUsername(), e);
             return false;
         }
     }
@@ -157,9 +180,10 @@ public class UserDAO {
                 while (rs.next()) {
                     roles.add(rs.getString("name"));
                 }
+                logger.info("Roles retrieved for user ID: {}", userId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving roles for user ID: {}", userId, e);
             return roles;
         }
 

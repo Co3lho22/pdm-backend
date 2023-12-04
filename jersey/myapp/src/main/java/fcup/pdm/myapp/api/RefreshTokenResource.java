@@ -43,11 +43,13 @@ public class RefreshTokenResource {
 
             String newRefreshToken = JwtUtil.generateRefreshToken(username, roles);
 
-            userAuthDAO.updateRefreshToken(username, newRefreshToken);
-            logger.info("Refresh token updated in the database for user: {}", username);
+            if(userAuthDAO.updateRefreshToken(username, newRefreshToken)){
 
-            logger.info("New access and refresh tokens generated for user: {}", username);
-            return Response.ok().entity("{\"accessToken\":\"" + newAccessToken + "\", \"refreshToken\":\"" + newRefreshToken + "\"}").build();
+                logger.info("New access and refresh tokens generated for user: {}", username);
+                return Response.ok().entity("{\"accessToken\":\"" + newAccessToken + "\", \"refreshToken\":\"" + newRefreshToken + "\"}").build();
+            }
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Was not able to update the refresh token in the db").build();
         } catch (Exception e) {
             logger.error("Error occurred while refreshing token for user: {}", refreshToken, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when tried to get a new token").build();

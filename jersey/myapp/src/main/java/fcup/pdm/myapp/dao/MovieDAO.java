@@ -8,10 +8,12 @@ import java.util.*;
 
 import fcup.pdm.myapp.model.Movie;
 import fcup.pdm.myapp.util.DBConnection;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class MovieDAO {
+    private static final Logger logger = LogManager.getLogger(AdminDAO.class);
 
     private Movie extractMovieFromResultSet(ResultSet rs) throws SQLException {
         Movie movie = new Movie();
@@ -22,6 +24,9 @@ public class MovieDAO {
         movie.setRating(rs.getFloat("rating"));
         movie.setRelease_date(rs.getDate("release_date"));
         movie.setDescription(rs.getString("description"));
+
+        logger.info("Extracted movie from result set successfully with movie title: {}", movie.getTitle());
+
         return movie;
     }
 
@@ -34,10 +39,11 @@ public class MovieDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                logger.info("Got movie by id successfully with movie id: {}", id);
                 return extractMovieFromResultSet(rs);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error getting movie by id with movie id: {}", id, e);
         }
         return null;
     }
@@ -93,8 +99,9 @@ public class MovieDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving movies", e);
         }
+        logger.info("Got movies successfully");
         return movies;
     }
 

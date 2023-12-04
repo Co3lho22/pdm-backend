@@ -2,6 +2,8 @@ package fcup.pdm.myapp.dao;
 
 import fcup.pdm.myapp.model.Genre;
 import fcup.pdm.myapp.util.DBConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.*;
 
 public class GenreDAO {
+    private static final Logger logger = LogManager.getLogger(GenreDAO.class);
 
     public List<Genre> getAllGenres() {
         List<Genre> genres = new ArrayList<>();
@@ -25,8 +28,9 @@ public class GenreDAO {
                 genres.add(genre);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error returning all genres", e);
         }
+        logger.info("Returned all genres successfully");
         return genres;
     }
 
@@ -39,10 +43,11 @@ public class GenreDAO {
             ps.setString(2, genre.getName());
 
             try (ResultSet rs = ps.executeQuery()) {
+                logger.info("Successfully verified if genre exists with genre name: {}", genre.getName());
                 return rs.next();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error verifying if genre exits with genre name: {}", genre.getName(), e);
         }
         return false;
     }
@@ -59,10 +64,11 @@ public class GenreDAO {
 
             if (rs.next()) {
                 name = rs.getString("name");
+                logger.info("Successfully got genre name by the genre id with genre name: {}", name);
                 return name;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving the genre name by genre id with id: {}", id, e);
         }
         return name;
     }
@@ -94,8 +100,10 @@ public class GenreDAO {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving genres from moviesIds with movieIds: {}", movieIds, e);
         }
+
+        logger.info("Got genres from moviesIds successfully with movieIds: {}", movieIds);
         return movieGenresMap;
     }
 

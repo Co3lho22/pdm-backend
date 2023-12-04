@@ -15,7 +15,7 @@ import java.util.Optional;
 @Path("/movie")
 public class MovieResource {
 
-    private static final Logger logger = LogManager.getLogger(LoginResource.class);
+    private static final Logger logger = LogManager.getLogger(MovieResource.class);
     MovieDAO movieDAO = new MovieDAO();
 
 //    @POST

@@ -1,6 +1,8 @@
 package fcup.pdm.myapp.dao;
 
 import fcup.pdm.myapp.util.DBConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserFavoritesDAO {
+    private static final Logger logger = LogManager.getLogger(UserFavoritesDAO.class);
     public boolean addFavoriteMovies(int userId, List<Integer> movieIds) {
         String query = "INSERT INTO USER_FAVORITES_MOVIES (user_id, movie_id) VALUES (?, ?)";
         try (Connection connection = DBConnection.getConnection();
@@ -22,9 +25,11 @@ public class UserFavoritesDAO {
             }
 
             int[] rowsAffected = ps.executeBatch();
-            return Arrays.stream(rowsAffected).sum() == movieIds.size();
+            boolean success = Arrays.stream(rowsAffected).sum() == movieIds.size();
+            logger.info("Added favorite movies for user ID: {} | Success: {}", userId, success);
+            return success;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error adding favorite movies for user ID: {}", userId, e);
             return false;
         }
     }
@@ -43,8 +48,9 @@ public class UserFavoritesDAO {
                     favoriteMovies.add(rs.getInt("movie_id"));
                 }
             }
+            logger.info("Retrieved favorite movies for user ID: {}", userId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving favorite movies for user ID: {}", userId, e);
         }
         return favoriteMovies;
     }
@@ -61,9 +67,11 @@ public class UserFavoritesDAO {
             }
 
             int[] rowsAffected = ps.executeBatch();
-            return Arrays.stream(rowsAffected).sum() == movieIds.size(); // Check if all insertions were successful
+            boolean success = Arrays.stream(rowsAffected).sum() == movieIds.size();
+            logger.info("Removed favorite movies for user ID: {} | Success: {}", userId, success);
+            return success;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error removing favorite movies for user ID: {}", userId, e);
             return false;
         }
     }
@@ -79,9 +87,11 @@ public class UserFavoritesDAO {
             }
 
             int[] rowsAffected = ps.executeBatch();
-            return Arrays.stream(rowsAffected).sum() == genreIds.size();
+            boolean success = Arrays.stream(rowsAffected).sum() == genreIds.size();
+            logger.info("Added favorite genres for user ID: {} | Success: {}", userId, success);
+            return success;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error adding favorite genres for user ID: {}", userId, e);
             return false;
         }
     }
@@ -100,8 +110,9 @@ public class UserFavoritesDAO {
                     favoriteMovies.add(rs.getInt("genres_id"));
                 }
             }
+            logger.info("Retrieved favorite genres for user ID: {}", userId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error retrieving favorite genres for user ID: {}", userId, e);
         }
         return favoriteMovies;
     }
@@ -118,9 +129,11 @@ public class UserFavoritesDAO {
             }
 
             int[] rowsAffected = ps.executeBatch();
-            return Arrays.stream(rowsAffected).sum() == genreIds.size(); // Check if all insertions were successful
+            boolean success = Arrays.stream(rowsAffected).sum() == genreIds.size();
+            logger.info("Removed favorite genres for user ID: {} | Success: {}", userId, success);
+            return success;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error removing favorite genres for user ID: {}", userId, e);
             return false;
         }
     }
