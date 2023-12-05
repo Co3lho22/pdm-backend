@@ -45,10 +45,11 @@ public class RefreshTokenResource {
 
             String username = JwtUtil.getUsernameFromToken(refreshToken);
             logger.info("Username extracted from refresh token: {}", username);
+            int userId = JwtUtil.getUserIdFromToken(refreshToken);
 
             List<String> roles = new ArrayList<>();
             roles.add(AppConstants.ROLE_USER);
-            String newAccessToken = JwtUtil.generateToken(username, roles);
+            String newAccessToken = JwtUtil.generateToken(userId, username, roles);
 
             String newRefreshToken = JwtUtil.generateRefreshToken(username, roles);
 

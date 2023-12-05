@@ -44,7 +44,7 @@ public class LoginResource {
                 List<String> roles = new ArrayList<>();
                 roles.add(AppConstants.ROLE_USER);
 
-                String accessToken = JwtUtil.generateToken(user.getUsername(), roles);
+                String accessToken = JwtUtil.generateToken(user.getId(), user.getUsername(), roles);
                 String refreshToken = JwtUtil.generateRefreshToken(user.getUsername(), roles);
 
                 UserAuthDAO userAuthDAO = new UserAuthDAO();

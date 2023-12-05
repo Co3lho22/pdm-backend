@@ -28,8 +28,9 @@ public class JwtUtil {
      * @param roles    The roles to include in the token.
      * @return The generated JWT token.
      */
-    public static String generateToken(String username, List<String> roles) {
+    public static String generateToken(int userId, String username, List<String> roles) {
         String token = JWT.create()
+                .withClaim("userId", userId)
                 .withSubject(username)
                 .withClaim("roles", roles)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -53,6 +54,26 @@ public class JwtUtil {
                     .verify(token);
             logger.info("JWT token verified successfully for user: {}", jwt.getSubject());
             return jwt.getSubject();
+        } catch (JWTVerificationException e) {
+            logger.error("Error verifying JWT token", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Extracts the username from a JWT token.
+     *
+     * @param token The JWT token to extract the username from.
+     * @return The userID extracted from the token.
+     * @throws JWTVerificationException If the token cannot be verified.
+     */
+    public static int getUserIdFromToken(String token) {
+        try {
+            DecodedJWT jwt = JWT.require(Algorithm.HMAC512(SECRET_KEY))
+                    .build()
+                    .verify(token);
+            logger.info("JWT token verified successfully for user: {}", jwt.getSubject());
+            return jwt.getClaim("userId").asInt();
         } catch (JWTVerificationException e) {
             logger.error("Error verifying JWT token", e);
             throw e;
