@@ -25,16 +25,12 @@ public class AdminDAO {
      * @return True if the movie was added and linked successfully; otherwise, false.
      */
     public boolean addMovie(Movie movie, int genreId) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DBConnection.getConnection();
-            connection.setAutoCommit(false);
-
-            String movieQuery = "INSERT INTO MOVIES (title, duration, rating, " +
-                    "release_date, description) VALUES (?, ?, ?, ?, ?)";
-
-            ps = connection.prepareStatement(movieQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+        String movieQuery = "INSERT INTO MOVIES (title, duration, rating, " +
+                "release_date, description) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     movieQuery,
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, movie.getTitle());
             ps.setInt(2, movie.getDuration());
             ps.setFloat(3, movie.getRating());
@@ -43,7 +39,6 @@ public class AdminDAO {
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected == 0) {
-                connection.rollback();
                 return false;
             }
 
@@ -52,33 +47,18 @@ public class AdminDAO {
                 if (generatedKeys.next()) {
                     movieId = generatedKeys.getInt(1);
                 } else {
-                    connection.rollback();
                     return false;
                 }
             }
 
             if (!linkMovieWithGenre(movieId, genreId)) {
-                connection.rollback();
                 return false;
             }
 
-            connection.commit();
-
-            logger.info("Movie added successfully with title: {}", movie.getTitle());
             return true;
         } catch (Exception e) {
             logger.error("Error adding movie: {}", movie.getTitle(), e);
-
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
             return false;
-        } finally {
-            closeResources(ps, connection);
         }
     }
 

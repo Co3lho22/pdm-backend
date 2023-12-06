@@ -127,12 +127,8 @@ public class Movie {
     }
 
     public boolean isMovieCompleteToUpdate(){
+        if(!isMovieCompleteToAdd()) return false;
         if (id < 0) return false;
-        if (title == null || title.isEmpty()) return false;
-        if (duration <= 0) return false;
-        if (rating < 0) return false;
-        if (release_date == null) return false;
-        if (description == null || description.isEmpty()) return false;
         return true;
     }
 }
