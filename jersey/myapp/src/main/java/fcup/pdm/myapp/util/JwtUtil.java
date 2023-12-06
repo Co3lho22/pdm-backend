@@ -87,8 +87,9 @@ public class JwtUtil {
      * @param roles    The roles to include in the refresh token.
      * @return The generated refresh token.
      */
-    public static String generateRefreshToken(String username, List<String> roles) {
+    public static String generateRefreshToken(int userId, String username, List<String> roles) {
         String refreshToken = JWT.create()
+                .withClaim("userId", userId)
                 .withSubject(username)
                 .withClaim("roles", roles)
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))

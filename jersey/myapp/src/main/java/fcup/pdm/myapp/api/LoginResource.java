@@ -46,7 +46,7 @@ public class LoginResource {
                 user.setId(userDao.getUserIDByUsername(user.getUsername()));
 
                 String accessToken = JwtUtil.generateToken(user.getId(), user.getUsername(), roles);
-                String refreshToken = JwtUtil.generateRefreshToken(user.getUsername(), roles);
+                String refreshToken = JwtUtil.generateRefreshToken(user.getId(), user.getUsername(), roles);
 
                 UserAuthDAO userAuthDAO = new UserAuthDAO();
                 userAuthDAO.storeRefreshToken(foundUser.getId(), refreshToken);

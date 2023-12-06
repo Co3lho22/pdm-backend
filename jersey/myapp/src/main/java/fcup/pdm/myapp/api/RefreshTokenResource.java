@@ -51,7 +51,7 @@ public class RefreshTokenResource {
             roles.add(AppConstants.ROLE_USER);
             String newAccessToken = JwtUtil.generateToken(userId, username, roles);
 
-            String newRefreshToken = JwtUtil.generateRefreshToken(username, roles);
+            String newRefreshToken = JwtUtil.generateRefreshToken(userId, username, roles);
 
             if(userAuthDAO.updateRefreshToken(username, newRefreshToken)){
 
