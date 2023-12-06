@@ -33,7 +33,7 @@ public class UserAuthDAO {
                     JwtUtil.verifyToken(refreshToken);
                     return true;
                 } catch (Exception e) {
-                    logger.info("Refresh token not valid with refresh token: {}", refreshToken);
+                    logger.warn("Refresh token not valid with refresh token: {}", refreshToken);
                     return false;
                 }
             }
@@ -59,10 +59,10 @@ public class UserAuthDAO {
             ps.setString(2, username);
             int rowsAffected = ps.executeUpdate();
 
-            logger.info("Updated the refresh token successfully with refresh token: {}", newRefreshToken);
+            logger.info("Updated the refresh token successfully for user: {}", username);
             return rowsAffected > 0;
         } catch (Exception e) {
-            logger.error("Error updating the refresh token with refresh token: {}", newRefreshToken, e);
+            logger.error("Error updating the refresh token for user: {}", username, e);
             return false;
         }
     }
@@ -85,10 +85,10 @@ public class UserAuthDAO {
 
             int rowsAffected = ps.executeUpdate();
 
-            logger.info("Stored the refresh token successfully with refresh token");
+            logger.info("Stored the refresh token successfully for userId: {}", userId);
             return rowsAffected > 0;
         } catch (Exception e) {
-            logger.error("Error storing the refresh token with refresh token", e);
+            logger.error("Error storing the refresh token for userId: {}", userId, e);
             return false;
         }
     }
