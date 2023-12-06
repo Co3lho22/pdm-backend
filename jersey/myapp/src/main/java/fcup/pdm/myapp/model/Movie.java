@@ -1,6 +1,8 @@
 package fcup.pdm.myapp.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The Movie class represents a movie entity with various attributes such as ID, title, genre, duration, rating,
@@ -9,7 +11,6 @@ import java.util.Date;
 public class Movie {
     private int id;
     private String title;
-    private String genre;
     private int duration;  // In minutes
     private float rating;
     private Date release_date;
@@ -18,7 +19,14 @@ public class Movie {
     /**
      * Default constructor for the Movie class.
      */
-    public Movie() {}
+    public Movie() {
+        this.id = -1;
+        this.title = null;
+        this.duration = -1;
+        this.rating = -1.0f;
+        this.release_date = null;
+        this.description = null;
+    }
 
     /**
      * Get the title of the movie.
@@ -47,20 +55,6 @@ public class Movie {
      * @param id The unique identifier of the movie.
      */
     public void setId(int id){ this.id = id; }
-
-    /**
-     * Get the genre of the movie.
-     *
-     * @return The genre of the movie.
-     */
-    public String getGenre(){ return genre;}
-
-    /**
-     * Set the genre of the movie.
-     *
-     * @param genre The genre of the movie.
-     */
-    public void setGenre(String genre){ this.genre = genre; }
 
     /**
      * Get the duration of the movie in minutes.
@@ -118,4 +112,27 @@ public class Movie {
      */
     public void setDescription(String description){ this.description = description; }
 
+    /**
+     * Checks if the movie object is complete with valid attributes.
+     *
+     * @return True if the movie is complete and valid, false otherwise.
+     */
+    public boolean isMovieCompleteToAdd(){
+        if (title == null || title.isEmpty()) return false;
+        if (duration <= 0) return false;
+        if (rating < 0) return false;
+        if (release_date == null) return false;
+        if (description == null || description.isEmpty()) return false;
+        return true;
+    }
+
+    public boolean isMovieCompleteToUpdate(){
+        if (id < 0) return false;
+        if (title == null || title.isEmpty()) return false;
+        if (duration <= 0) return false;
+        if (rating < 0) return false;
+        if (release_date == null) return false;
+        if (description == null || description.isEmpty()) return false;
+        return true;
+    }
 }

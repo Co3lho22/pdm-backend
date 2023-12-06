@@ -265,9 +265,11 @@ Example Request(json):
     Content-Type: application/json
 
     {
-    "title": "New Movie",
-    "description": "Description of the new movie...",
-    "genreId": 5
+    "title": "Inception",
+    "duration": 148,
+    "rating": 8.8,
+    "releaseDate": "2010-07-16",
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology..."
     }
 
 Example Response(json):
@@ -292,8 +294,11 @@ Example Request (json):
     
     {
     "id": 123,
-    "title": "Updated Movie Title",
-    // Other updated movie details
+    "title": "Inception",
+    "duration": 148,
+    "rating": 8.8,
+    "releaseDate": "2010-07-16",
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology..."
     }
 
 Example Response(json):

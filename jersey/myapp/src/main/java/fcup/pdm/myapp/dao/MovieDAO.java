@@ -29,7 +29,6 @@ public class MovieDAO {
         Movie movie = new Movie();
         movie.setId(rs.getInt("id"));
         movie.setTitle(rs.getString("title"));
-        movie.setGenre(rs.getString("genre"));
         movie.setDuration(rs.getInt("duration"));
         movie.setRating(rs.getFloat("rating"));
         movie.setRelease_date(rs.getDate("release_date"));

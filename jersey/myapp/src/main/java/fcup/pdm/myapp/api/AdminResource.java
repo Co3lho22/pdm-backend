@@ -36,6 +36,11 @@ public class AdminResource {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
         }
 
+        if(!movie.isMovieCompleteToAdd()){
+            logger.info("received a movie incomplete");
+            return Response.status(Response.Status.BAD_REQUEST).entity("Movie is not complete").build();
+        }
+
         if (adminDAO.addMovie(movie, genreId)) {
             logger.info("Movie added successfully: {}", movie.getTitle());
             return Response.ok().entity("Movie added successfully").build();
@@ -59,6 +64,11 @@ public class AdminResource {
     public Response updateMovie(@HeaderParam("Authorization") String authHeader, Movie movie) {
         if (!isAuthorized(authHeader, AppConstants.PERMISSION_WRITE)) {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
+        }
+
+        if(!movie.isMovieCompleteToUpdate()){
+            logger.info("received a movie incomplete");
+            return Response.status(Response.Status.BAD_REQUEST).entity("Movie is not complete").build();
         }
 
         if (adminDAO.updateMovie(movie)) {
