@@ -1,7 +1,7 @@
-API Endpoints Documentation
+# API Endpoints Documentation
 1. Favorite Movies and Genres
  
-Add Favorite Movies
+## Add Favorite Movies
 
     Endpoint: /favorite/movies/{userId}
     Method: POST
@@ -9,6 +9,7 @@ Add Favorite Movies
 Example Request (json):
 
     POST /favorite/movies/123
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
     
     [1, 2, 3]
@@ -20,7 +21,7 @@ Example Response (json):
 
     "Favorite movies added successfully"
 
-Get Favorite Movies
+## Get Favorite Movies
 
     Endpoint: /favorite/movies/{userId}
     Method: GET
@@ -28,6 +29,7 @@ Get Favorite Movies
 Example Request:
 
     GET /favorite/movies/123
+    Authorization: Bearer <JWT Token>
 
 Example Response (json):
 
@@ -36,7 +38,7 @@ Example Response (json):
 
     [1, 2, 3]
 
-Remove Favorite Movies
+## Remove Favorite Movies
 
     Endpoint: /favorite/movies/{userId}
     Method: DELETE
@@ -44,6 +46,7 @@ Remove Favorite Movies
 Example Request (json):
 
     DELETE /favorite/movies/123
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
     
     [1, 2]
@@ -55,7 +58,7 @@ Example Response (json):
 
     "Favorite movies removed successfully"
 
-Add Favorite Genres
+## Add Favorite Genres
 
     Endpoint: /favorite/genres/{userId}
     Method: POST
@@ -63,6 +66,7 @@ Add Favorite Genres
 Example Request:
 
     POST /favorite/genres/123
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
     
     [4, 5]
@@ -74,7 +78,7 @@ Example Response(json):
 
     "Favorite genres added successfully"
 
-Get Favorite Genres
+## Get Favorite Genres
 
     Endpoint: /favorite/genres/{userId}
     Method: GET
@@ -82,6 +86,7 @@ Get Favorite Genres
 Example Request:
 
     GET /favorite/genres/123
+    Authorization: Bearer <JWT Token>
 
 Example Response(json):
 
@@ -90,7 +95,7 @@ Example Response(json):
 
     [4, 5]
 
-Remove Favorite Genres
+## Remove Favorite Genres
 
     Endpoint: /favorite/genres/{userId}
     Method: DELETE
@@ -99,6 +104,7 @@ Example Request(json):
 
 
     DELETE /favorite/genres/123
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
 
     [4]
@@ -112,7 +118,7 @@ Example Response(json):
 
 2. User Authentication
    
-User Login
+## User Login
 
         Endpoint: /login 
         Method: POST
@@ -121,6 +127,7 @@ Example Request (json):
 
 
     POST /login
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
     
     {
@@ -138,7 +145,7 @@ Example Response (json):
       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
 
-User Registration
+## User Registration
 
     Endpoint: /register
     Method: POST
@@ -147,6 +154,7 @@ Example Request (json):
 
 
     POST /register
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
     
     {
@@ -163,7 +171,7 @@ Example Response (json):
 
     "Registration Successful"
 
-Refresh Token
+## Refresh Token
 
     Endpoint: /refresh
     Method: POST
@@ -171,6 +179,7 @@ Refresh Token
 Example Request (json):
 
     POST /refresh
+    Authorization: Bearer <JWT Token>
     Content-Type: application/json
     
     {
@@ -189,7 +198,7 @@ Example Response (json):
 
 3. Movie Information
    
-Get Movie by ID
+## Get Movie by ID
 
     Endpoint: /movie/{id}
     Method: GET 
@@ -197,6 +206,7 @@ Get Movie by ID
 Example Request:
 
     GET /movie/456
+    Authorization: Bearer <JWT Token>
 
 Example Response (json):
 
@@ -210,7 +220,7 @@ Example Response (json):
       // Other movie details
     }
 
-Get Movies
+## Get Movies
 
     Endpoint: /movie
     Method: GET
@@ -218,6 +228,7 @@ Get Movies
 Example Request:
 
     GET /movie?minRating=4.5&maxRating=5&startDate=2023-01-01&endDate=2023-12-31&limit=10
+    Authorization: Bearer <JWT Token>
 
 Example Response (json):
 
@@ -237,4 +248,134 @@ Example Response (json):
       }
       // More movies
     ]
+
+
+# Admin Operations
+## Add New Movie
+
+    Endpoint: /admin/addMovie
+    Method: POST
+    Authorization Required: Yes
+    Content-Type: application/json
+
+Example Request(json):
+
+    POST /admin/addMovie
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+
+    {
+    "title": "New Movie",
+    "description": "Description of the new movie...",
+    "genreId": 5
+    }
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "Movie added successfully"
+
+## Update Existing Movie
+
+    Endpoint: /admin/updateMovie
+    Method: PUT
+    Authorization Required: Yes
+    Content-Type: application/json
+
+Example Request (json):
+
+    PUT /admin/updateMovie
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+    
+    {
+    "id": 123,
+    "title": "Updated Movie Title",
+    // Other updated movie details
+    }
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "Movie updated successfully"
+
+## Delete Movie
+
+    Endpoint: /admin/deleteMovie/{movieId}
+    Method: DELETE
+    Authorization Required: Yes
+
+Example Request:
+
+    DELETE /admin/deleteMovie/123
+    Authorization: Bearer <JWT Token>
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "Movie deleted successfully"
+
+## Add New Genre
+
+    Endpoint: /admin/addGenre
+    Method: POST
+    Authorization Required: Yes
+    Content-Type: text/plain
+
+Example Request:
+
+    POST /admin/addGenre
+    Authorization: Bearer <JWT Token>
+    Content-Type: text/plain
+
+    Comedy
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "Genre added successfully"
+
+## Remove Genre
+
+    Endpoint: /admin/removeGenre/{genreId}
+    Method: DELETE
+    Authorization Required: Yes
+
+Example Request:
+
+    DELETE /admin/removeGenre/4
+    Authorization: Bearer <JWT Token>
+
+Example Response(json):
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "Genre removed successfully"
+
+## Remove User
+
+    Endpoint: /admin/removeUser/{userId}
+    Method: DELETE
+    Authorization Required: Yes
+
+Example Request:
+    
+    DELETE /admin/removeUser/456
+    Authorization: Bearer <JWT Token>
+
+Example Response:
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "User removed successfully"
 

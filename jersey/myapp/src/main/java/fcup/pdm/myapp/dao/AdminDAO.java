@@ -1,6 +1,5 @@
 package fcup.pdm.myapp.dao;
 
-import fcup.pdm.myapp.api.LoginResource;
 import fcup.pdm.myapp.model.Movie;
 import fcup.pdm.myapp.util.DBConnection;
 import org.apache.logging.log4j.LogManager;
