@@ -43,6 +43,7 @@ public class LoginResource {
 
                 List<String> roles = new ArrayList<>();
                 roles.add(AppConstants.ROLE_USER);
+                user.setId(userDao.getUserIDByUsername(user.getUsername()));
 
                 String accessToken = JwtUtil.generateToken(user.getId(), user.getUsername(), roles);
                 String refreshToken = JwtUtil.generateRefreshToken(user.getUsername(), roles);
