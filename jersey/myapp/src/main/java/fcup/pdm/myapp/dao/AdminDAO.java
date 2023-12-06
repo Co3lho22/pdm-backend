@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * This class provides data access methods for administrative operations.
@@ -25,12 +24,17 @@ public class AdminDAO {
      * @return True if the movie was added and linked successfully; otherwise, false.
      */
     public boolean addMovie(Movie movie, int genreId) {
-        String movieQuery = "INSERT INTO MOVIES (title, duration, rating, " +
-                "release_date, description) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(
-                     movieQuery,
-                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBConnection.getConnection();
+            connection.setAutoCommit(false);
+
+            String movieQuery = "INSERT INTO MOVIES (title, duration, rating, " +
+                    "release_date, description) VALUES (?, ?, ?, ?, ?)";
+            logger.info("movieQuery: {}", movieQuery);
+
+            ps = connection.prepareStatement(movieQuery, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, movie.getTitle());
             ps.setInt(2, movie.getDuration());
             ps.setFloat(3, movie.getRating());
@@ -39,26 +43,48 @@ public class AdminDAO {
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected == 0) {
+                logger.info("rowsAffected == 0");
+                connection.rollback();
                 return false;
             }
 
             int movieId;
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    logger.info("generatedKey has next");
                     movieId = generatedKeys.getInt(1);
                 } else {
+                    logger.info("generate.next() is false");
+                    connection.rollback();
                     return false;
                 }
             }
+            logger.info("Passed the generatedKeys with movieId: {} | genreId: {}", movieId, genreId);
+            connection.commit();
 
             if (!linkMovieWithGenre(movieId, genreId)) {
+                logger.info("There is no link between movieId({}) and genreId({})", movieId, genreId);
+                connection.rollback();
                 return false;
             }
 
+            // connection.commit();
+
+            logger.info("Movie added successfully with title: {}", movie.getTitle());
             return true;
         } catch (Exception e) {
             logger.error("Error adding movie: {}", movie.getTitle(), e);
+
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
             return false;
+        } finally {
+            closeResources(ps, connection);
         }
     }
 
