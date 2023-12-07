@@ -1,8 +1,11 @@
 package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.AdminDAO;
+import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.model.Movie;
+import fcup.pdm.myapp.model.User;
 import fcup.pdm.myapp.util.JwtUtil;
+import fcup.pdm.myapp.util.PasswordUtil;
 import fcup.pdm.myapp.util.RBACUtil;
 import fcup.pdm.myapp.util.AppConstants;
 import jakarta.ws.rs.*;
@@ -45,7 +48,7 @@ public class AdminResource {
             logger.info("Movie added successfully: {}", movie.getTitle());
             return Response.ok().entity("Movie added successfully").build();
         } else {
-            logger.error("Error adding movie: {}", movie.getTitle());
+            logger.error("Error adding movie with movie Title {} and genreId {} ", movie.getTitle(), genreId);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding movie").build();
         }
     }
@@ -77,6 +80,39 @@ public class AdminResource {
         } else {
             logger.error("Error updating movie: {}", movie.getTitle());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error updating movie").build();
+        }
+    }
+
+    /**
+     * Adds a new user to the system.
+     *
+     * @param authHeader      The authorization header containing a JWT token.
+     * @param user            The user class with the user metadata.
+     * @param roleId            The role of the new user.
+     * @return A response indicating whether the user was added successfully or not.
+     */
+    @POST
+    @Path("/addUser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addUser(@HeaderParam("Authorization") String authHeader,
+                            User user,
+                            @QueryParam("roleId") int roleId) {
+
+        if (!isAuthorized(authHeader, AppConstants.PERMISSION_WRITE)) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
+        }
+
+        // Hash password
+        user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
+
+        if (adminDAO.addUser(user.getUsername(), user.getHashedPassword(), user.getEmail(), user.getCountry(),
+                user.getPhone(), roleId)) {
+            logger.info("User added successfully with username: {}", user.getUsername());
+            return Response.ok().entity("User added successfully").build();
+        } else {
+            logger.error("Error adding user: {}", user.getUsername());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding user").build();
         }
     }
 

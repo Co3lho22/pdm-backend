@@ -17,6 +17,92 @@ public class AdminDAO {
     private static final Logger logger = LogManager.getLogger(AdminDAO.class);
 
     /**
+     * Adds a new user to the database.
+     *
+     * @param username The username of the new user.
+     * @param hashedPassword The hashed password of the new user.
+     * @param email The email of the new user.
+     * @param country The country of the new user.
+     * @param phone The phone number of the new user.
+     * @param roleId The role of the new user.
+     * @return True if the user was added successfully; otherwise, false.
+     */
+    public boolean addUser(String username,
+                           String hashedPassword,
+                           String email,
+                           String country,
+                           String phone,
+                           int roleId) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBConnection.getConnection();
+            connection.setAutoCommit(false);
+
+            String userQuery = "INSERT INTO USERS (username, hashed_password, email, country, phone) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+            ps = connection.prepareStatement(userQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setString(1, username);
+            ps.setString(2, hashedPassword);
+            ps.setString(3, email);
+            ps.setString(4, country);
+            ps.setString(5, phone);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected == 0) {
+                connection.rollback();
+                return false;
+            }
+
+            int userId;
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    userId = generatedKeys.getInt(1);
+                } else {
+                    connection.rollback();
+                    return false;
+                }
+            }
+
+            if (roleId > 0) {
+                String roleQuery = "INSERT INTO USER_ROLE (user_id, role_id) " +
+                        "VALUES (?, (SELECT id FROM ROLE WHERE name = ?))";
+                ps = connection.prepareStatement(roleQuery);
+                ps.setInt(1, userId);
+                ps.setInt(2, roleId);
+                rowsAffected = ps.executeUpdate();
+
+                if (rowsAffected == 0) {
+                    connection.rollback();
+                    return false;
+                }
+            } else {
+                logger.warn("Invalid role ID provided: {}", roleId);
+                connection.rollback();
+                return false;
+            }
+
+
+            connection.commit();
+            logger.info("User added successfully with username: {}", username);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error adding user: {}", username, e);
+
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        } finally {
+            closeResources(ps, connection);
+        }
+    }
+
+    /**
      * Removes a user from the database by their ID and deletes related data.
      *
      * @param userId The ID of the user to be removed.

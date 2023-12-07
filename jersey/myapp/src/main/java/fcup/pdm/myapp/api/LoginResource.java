@@ -36,9 +36,10 @@ public class LoginResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response verifyLogin(User user) {
-        UserDAO userDao = new UserDAO();
-        User foundUser = userDao.getUserByUsername(user.getUsername());
         try{
+            UserDAO userDao = new UserDAO();
+            User foundUser = userDao.getUserByUsername(user.getUsername());
+
             if (foundUser != null && PasswordUtil.checkPassword(user.getPassword(), foundUser.getHashedPassword())) {
 
                 List<String> roles = new ArrayList<>();

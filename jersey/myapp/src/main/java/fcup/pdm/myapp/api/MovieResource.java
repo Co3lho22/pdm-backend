@@ -21,41 +21,6 @@ public class MovieResource {
     private static final Logger logger = LogManager.getLogger(MovieResource.class);
     MovieDAO movieDAO = new MovieDAO();
 
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response addMovie(Movie movie) {
-//        boolean isAdded = movieDAO.addMovie(movie);
-//        if (isAdded) {
-//            return Response.status(Response.Status.CREATED).entity(movie).build();
-//        } else {
-//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
-//
-////    @PUT
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response updateMovie(Movie movie) {
-//        boolean isUpdated = movieDAO.updateMovie(movie);
-//        if (isUpdated) {
-//            return Response.ok(movie).build();
-//        } else {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }
-//    }
-//
-//    @DELETE
-//    @Path("/{id}")
-//    public Response deleteMovie(@PathParam("id") int id) {
-//        boolean isDeleted = movieDAO.deleteMovie(id);
-//        if (isDeleted) {
-//            return Response.status(Response.Status.NO_CONTENT).build();
-//        } else {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }
-//    }
-
     /**
      * Retrieves a movie by its ID.
      *
@@ -117,6 +82,4 @@ public class MovieResource {
                     "tried to verify the login").build();
         }
     }
-
-    // Add setRatting
 }
