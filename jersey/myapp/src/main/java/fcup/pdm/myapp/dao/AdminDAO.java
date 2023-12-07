@@ -24,7 +24,7 @@ public class AdminDAO {
      * @param email The email of the new user.
      * @param country The country of the new user.
      * @param phone The phone number of the new user.
-     * @param roleId The role of the new user.
+     * @param roleName The role of the new user.
      * @return True if the user was added successfully; otherwise, false.
      */
     public boolean addUser(String username,
@@ -32,7 +32,7 @@ public class AdminDAO {
                            String email,
                            String country,
                            String phone,
-                           int roleId) {
+                           String roleName) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -64,12 +64,12 @@ public class AdminDAO {
                 }
             }
 
-            if (roleId > 0) {
+            if (roleName != null && !roleName.isEmpty()) {
                 String roleQuery = "INSERT INTO USER_ROLE (user_id, role_id) " +
                         "VALUES (?, (SELECT id FROM ROLE WHERE name = ?))";
                 ps = connection.prepareStatement(roleQuery);
                 ps.setInt(1, userId);
-                ps.setInt(2, roleId);
+                ps.setString(2, roleName);
                 rowsAffected = ps.executeUpdate();
 
                 if (rowsAffected == 0) {
@@ -77,7 +77,6 @@ public class AdminDAO {
                     return false;
                 }
             } else {
-                logger.warn("Invalid role ID provided: {}", roleId);
                 connection.rollback();
                 return false;
             }

@@ -1,7 +1,6 @@
 package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.AdminDAO;
-import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.model.Movie;
 import fcup.pdm.myapp.model.User;
 import fcup.pdm.myapp.util.JwtUtil;
@@ -88,7 +87,7 @@ public class AdminResource {
      *
      * @param authHeader      The authorization header containing a JWT token.
      * @param user            The user class with the user metadata.
-     * @param roleId            The role of the new user.
+     * @param roleName        The role of the new user.
      * @return A response indicating whether the user was added successfully or not.
      */
     @POST
@@ -97,7 +96,7 @@ public class AdminResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(@HeaderParam("Authorization") String authHeader,
                             User user,
-                            @QueryParam("roleId") int roleId) {
+                            @QueryParam("roleName") String roleName) {
 
         if (!isAuthorized(authHeader, AppConstants.PERMISSION_WRITE)) {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
@@ -107,7 +106,7 @@ public class AdminResource {
         user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
 
         if (adminDAO.addUser(user.getUsername(), user.getHashedPassword(), user.getEmail(), user.getCountry(),
-                user.getPhone(), roleId)) {
+                user.getPhone(), roleName)) {
             logger.info("User added successfully with username: {}", user.getUsername());
             return Response.ok().entity("User added successfully").build();
         } else {
