@@ -366,6 +366,34 @@ Example Response(json):
     
     "Genre removed successfully"
 
+## Add User
+
+    Endpoint: /admin/addUser?roleName={userName}
+    Method: POST
+    Authorization Required: Yes
+
+Note: roleName can be "admin" or "user"
+
+Example Request:
+
+    POST /admin/addUser?roleName=user
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+    {
+       "username": "test",
+       "password": "test",
+       "email": "user@example.com",
+       "country": "CountryName",
+       "phone": "1234567890"
+    }
+
+Example Response:
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    
+    "User added successfull"
+
 ## Remove User
 
     Endpoint: /admin/removeUser/{userId}
