@@ -160,7 +160,9 @@ Example Request (json):
     {
     "username": "new_user",
     "password": "newpassword",
-    "email": "newuser@example.com"
+    "email": "newuser@example.com",
+    "phone": "21323142134",
+    "country": "Portugal"
     }
 
 Example Response (json):
