@@ -1,6 +1,7 @@
 package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.AdminDAO;
+import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.model.Movie;
 import fcup.pdm.myapp.model.User;
 import fcup.pdm.myapp.util.JwtUtil;
@@ -102,8 +103,12 @@ public class AdminResource {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
         }
 
-        // Hash password
+        UserDAO userDao = new UserDAO();
         user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
+
+        if(userDao.userExists(user)){
+            return Response.status(Response.Status.BAD_REQUEST).entity("User already exists").build();
+        }
 
         if (adminDAO.addUser(user.getUsername(), user.getHashedPassword(), user.getEmail(), user.getCountry(),
                 user.getPhone(), roleName)) {
