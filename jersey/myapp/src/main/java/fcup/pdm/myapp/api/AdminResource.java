@@ -3,6 +3,7 @@ package fcup.pdm.myapp.api;
 import fcup.pdm.myapp.dao.AdminDAO;
 import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.model.Movie;
+import fcup.pdm.myapp.model.MovieLink;
 import fcup.pdm.myapp.model.User;
 import fcup.pdm.myapp.util.JwtUtil;
 import fcup.pdm.myapp.util.PasswordUtil;
@@ -13,6 +14,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 /**
  * This class defines RESTful web services for admin-related operations.
@@ -80,6 +83,33 @@ public class AdminResource {
         } else {
             logger.error("Error updating movie: {}", movie.getTitle());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error updating movie").build();
+        }
+    }
+
+    /**
+     * Updates the links associated with a movie in the system.
+     *
+     * @param authHeader The authorization header containing a JWT token.
+     * @param movieId    The ID of the movie for which links are being updated.
+     * @param newLinks   A list of MovieLink objects representing the new links to be associated
+     *                   with the movie.
+     * @return A response indicating whether the movie links were updated successfully or not.
+     */
+    @PUT
+    @Path("/updateMovieLinks/{movieId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateMovieLinks(@HeaderParam("Authorization") String authHeader,
+                                     @PathParam("movieId") int movieId,
+                                     List<MovieLink> newLinks) {
+        if (!isAuthorized(authHeader, AppConstants.PERMISSION_WRITE)) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
+        }
+
+        if (adminDAO.updateMovieLinks(movieId, newLinks)) {
+            return Response.ok().entity("Movie links updated successfully").build();
+        } else {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error updating movie links").build();
         }
     }
 

@@ -310,6 +310,55 @@ public class AdminDAO {
     }
 
     /**
+     * Updates the links associated with a movie in the database. This method first deletes
+     * the existing links for the specified movie and then adds the new links provided in the
+     * 'newLinks' parameter.
+     *
+     * @param movieId   The ID of the movie for which links are being updated.
+     * @param newLinks  A list of MovieLink objects representing the new links to be associated
+     *                  with the movie.
+     * @return True if the movie links were updated successfully; otherwise, false.
+     */
+    public boolean updateMovieLinks(int movieId, List<MovieLink> newLinks) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBConnection.getConnection();
+            connection.setAutoCommit(false);
+
+            // Delete existing links
+            String deleteLinksQuery = "DELETE FROM MOVIE_LINKS WHERE movie_id = ?";
+            ps = connection.prepareStatement(deleteLinksQuery);
+            ps.setInt(1, movieId);
+            ps.executeUpdate();
+
+            // Add new links
+            for (MovieLink link : newLinks) {
+                if (!addMovieLink(movieId, link)) {
+                    connection.rollback();
+                    return false;
+                }
+            }
+
+            connection.commit();
+            logger.info("Movie links updated successfully for movie with ID: {}", movieId);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error updating movie links for movie with ID: {}", movieId, e);
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        } finally {
+            closeResources(ps, connection);
+        }
+    }
+
+    /**
      * Deletes a movie by its ID and unlinks it from genres.
      *
      * @param movieId The ID of the movie to delete.
@@ -321,6 +370,11 @@ public class AdminDAO {
         try {
             connection = DBConnection.getConnection();
             connection.setAutoCommit(false);
+
+            String deleteLinksQuery = "DELETE FROM MOVIE_LINKS WHERE movie_id = ?";
+            ps = connection.prepareStatement(deleteLinksQuery);
+            ps.setInt(1, movieId);
+            ps.executeUpdate();
 
             String unlinkQuery = "DELETE FROM MOVIE_GENRES WHERE movie_id = ?";
             ps = connection.prepareStatement(unlinkQuery);

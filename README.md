@@ -266,13 +266,16 @@ Example Request(json):
     Authorization: Bearer <JWT Token>
     Content-Type: application/json
 
-    {
-    "title": "Inception",
-    "duration": 148,
-    "rating": 8.8,
-    "releaseDate": "2010-07-16",
-    "description": "A thief who steals corporate secrets through the use of dream-sharing technology..."
-    }
+    {"title": "The Fast and the Furious John Ireland", 
+    "duration": 72, 
+    "rating": 6.4, 
+    "release_date": "1955-11-26", 
+    "description": "A man wrongly imprisoned for murder (John Ireland) breaks out of jail. He wants to clear his name, but with the police pursuing him, he is forced to take a beautiful young woman, driving a fast sports car, hostage and slip into a cross-border sports car race to try to make it to Mexico before the police get him.", 
+    "links": [
+        {"link": "https://ia804708.us.archive.org/35/items/TheFastandtheFuriousJohnIreland1954goofyrip/TheFastandtheFuriousJohnIreland1954goofyrip.mp4", 
+        "resolution": "1080p", 
+        "format": "mp4"}
+    ]}
 
 Example Response(json):
 
