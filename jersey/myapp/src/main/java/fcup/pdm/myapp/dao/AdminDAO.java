@@ -1,6 +1,7 @@
 package fcup.pdm.myapp.dao;
 
 import fcup.pdm.myapp.model.Movie;
+import fcup.pdm.myapp.model.MovieLink;
 import fcup.pdm.myapp.util.DBConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * This class provides data access methods for administrative operations.
@@ -246,11 +248,18 @@ public class AdminDAO {
                     return false;
                 }
             }
+
             connection.commit();
 
             if (!linkMovieWithGenre(movieId, genreId)) {
-                connection.rollback();
                 return false;
+            }
+
+            List<MovieLink> links = movie.getLinks();
+            for (MovieLink link : links) {
+                if (!addMovieLink(movieId, link)) {
+                    return false;
+                }
             }
 
             return true;
@@ -366,6 +375,34 @@ public class AdminDAO {
             return rowsAffected > 0;
         } catch (Exception e) {
             logger.error("Error linking movie with id={} with genre with id={}", movieId, genreId, e);
+            return false;
+        }
+    }
+
+    /**
+     * Inserts a MovieLink object into the database and links it to a movie.
+     *
+     * @param movieId The ID of the movie to link the MovieLink object to.
+     * @param link    The MovieLink object to be inserted.
+     * @return True if the MovieLink was inserted and linked successfully; otherwise, false.
+     */
+    private boolean addMovieLink(int movieId, MovieLink link) {
+        String query = "INSERT INTO MOVIE_LINKS (movie_id, link, resolution, format, hash) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, movieId);
+            ps.setString(2, link.getLink());
+            ps.setString(3, link.getResolution());
+            ps.setString(4, link.getFormat());
+            ps.setString(5, link.getHash());
+
+            int rowsAffected = ps.executeUpdate();
+
+            logger.info("MovieLink added successfully for movie with ID: {}", movieId);
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            logger.error("Error adding MovieLink for movie with ID: {}", movieId, e);
             return false;
         }
     }

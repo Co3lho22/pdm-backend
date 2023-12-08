@@ -16,6 +16,8 @@ public class Movie {
     private Date release_date;
     private String description;
 
+    private List<MovieLink> links;
+
     /**
      * Default constructor for the Movie class.
      */
@@ -26,6 +28,7 @@ public class Movie {
         this.rating = -1.0f;
         this.release_date = null;
         this.description = null;
+        this.links = new ArrayList<>();
     }
 
     /**
@@ -113,22 +116,46 @@ public class Movie {
     public void setDescription(String description){ this.description = description; }
 
     /**
+     * Add a MovieLink object to the list of links associated with this movie.
+     *
+     * @param link The MovieLink object to be added to the list of links.
+     */
+    public void addLink(MovieLink link) {
+        this.links.add(link);
+    }
+
+    /**
+     * Get the list of links associated with this movie.
+     *
+     * @return A list of MovieLink objects representing links related to this movie.
+     */
+    public List<MovieLink> getLinks() {
+        return links;
+    }
+
+    /**
      * Checks if the movie object is complete with valid attributes.
      *
      * @return True if the movie is complete and valid, false otherwise.
      */
     public boolean isMovieCompleteToAdd(){
-        if (title == null || title.isEmpty()) return false;
-        if (duration <= 0) return false;
-        if (rating < 0) return false;
-        if (release_date == null) return false;
-        if (description == null || description.isEmpty()) return false;
+        if(title == null || title.isEmpty()) return false;
+        if(duration <= 0) return false;
+        if(rating < 0) return false;
+        if(release_date == null) return false;
+        if(description == null || description.isEmpty()) return false;
+        if(links == null || links.isEmpty()) return false;
         return true;
     }
 
+    /**
+     * Checks if the movie object is complete and valid for an update operation.
+     *
+     * @return True if the movie is complete and valid for updating, false otherwise.
+     */
     public boolean isMovieCompleteToUpdate(){
         if(!isMovieCompleteToAdd()) return false;
-        if (id < 0) return false;
+        if(id < 0) return false;
         return true;
     }
 }
