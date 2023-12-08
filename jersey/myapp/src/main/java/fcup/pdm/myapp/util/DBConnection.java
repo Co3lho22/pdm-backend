@@ -24,9 +24,9 @@ public class DBConnection {
             props.load(DBConnection.class.getClassLoader().getResourceAsStream("dbconfig.properties"));
 
             HikariConfig config = new HikariConfig();
-            config.setJdbcUrl(props.getProperty("db.url"));
-            config.setUsername(props.getProperty("db.user"));
-            config.setPassword(props.getProperty("db.password"));
+            config.setJdbcUrl(props.getProperty("db_MariaDB.url"));
+            config.setUsername(props.getProperty("db_MariaDB.user"));
+            config.setPassword(props.getProperty("db_MariaDB.password"));
 
             dataSource = new HikariDataSource(config);
             logger.info("Database connection pool initialized successfully");

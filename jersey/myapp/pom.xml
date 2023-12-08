@@ -20,6 +20,7 @@
         <slf4j.version>2.0.5</slf4j.version>
         <jakarta.version>4.0.1</jakarta.version>
         <jaxb.version>4.0.4</jaxb.version>
+        <datastax.version>4.13.0</datastax.version>
     </properties>
 
     <dependencies>
@@ -135,6 +136,12 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxb.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-core</artifactId>
+            <version>${datastax.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
