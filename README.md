@@ -265,17 +265,25 @@ Example Request(json):
     POST /admin/addMovie
     Authorization: Bearer <JWT Token>
     Content-Type: application/json
-
-    {"title": "The Fast and the Furious John Ireland", 
-    "duration": 72, 
-    "rating": 6.4, 
-    "release_date": "1955-11-26", 
-    "description": "A man wrongly imprisoned for murder (John Ireland) breaks out of jail. He wants to clear his name, but with the police pursuing him, he is forced to take a beautiful young woman, driving a fast sports car, hostage and slip into a cross-border sports car race to try to make it to Mexico before the police get him.", 
+    {
+    "title": "The Fast and the Furious John Ireland",
+    "duration": 72,
+    "rating": 8.5,
+    "release_date": "1955-11-26",
+    "description": "A man wrongly imprisoned for murder (John Ireland) breaks out of jail. He wants to clear his name, but with the police pursuing him, he is forced to take a beautiful young woman, driving a fast sports car, hostage and slip into a cross-border sports car race to try to make it to Mexico before the police get him.",
+    "genres": [
+                {"id": 1},
+                {"id": 2}
+              ],
     "links": [
-        {"link": "https://ia804708.us.archive.org/35/items/TheFastandtheFuriousJohnIreland1954goofyrip/TheFastandtheFuriousJohnIreland1954goofyrip.mp4", 
-        "resolution": "1080p", 
-        "format": "mp4"}
-    ]}
+                {
+                "link": "https://ia804708.us.archive.org/35/items/TheFastandtheFuriousJohnIreland1954goofyrip/TheFastandtheFuriousJohnIreland1954goofyrip.mp4",
+                "resolution": "1080p",
+                "format": "mp4"
+                }
+            ]
+    }
+
 
 Example Response(json):
 
@@ -373,7 +381,7 @@ Example Response(json):
 
 ## Add User
 
-    Endpoint: /admin/addUser?roleName={userName}
+    Endpoint: /admin/addUser
     Method: POST
     Authorization Required: Yes
 
@@ -381,15 +389,19 @@ Note: roleName can be "admin" or "user"
 
 Example Request:
 
-    POST /admin/addUser?roleName=user
+    POST /admin/addUser
     Authorization: Bearer <JWT Token>
     Content-Type: application/json
+
     {
-       "username": "test",
-       "password": "test",
-       "email": "user@example.com",
-       "country": "CountryName",
-       "phone": "1234567890"
+    "username": "test22",
+    "password": "test22",
+    "email": "newuser@example.com",
+    "country": "CountryName",
+    "phone": "123456789",
+    "role": {
+                "name": "user"
+            }
     }
 
 Example Response:
