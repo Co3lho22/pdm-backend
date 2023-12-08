@@ -14,6 +14,6 @@ public class AppConstants {
     public static final String PERMISSION_DELETE = "delete";
 
     // Streaming
-    public static final String HLS_OUTPUT_PATH = "/home/co3lho22/hls_output"
+    public static final String HLS_OUTPUT_PATH = "/home/co3lho22/hls_output";
 
 }

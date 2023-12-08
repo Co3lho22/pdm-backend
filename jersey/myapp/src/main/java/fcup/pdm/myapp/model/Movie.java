@@ -30,7 +30,7 @@ public class Movie {
         this.rating = -1.0f;
         this.release_date = null;
         this.description = null;
-        this.link = new MovieLink();
+        this.movie_link = new MovieLink();
     }
 
     /**
