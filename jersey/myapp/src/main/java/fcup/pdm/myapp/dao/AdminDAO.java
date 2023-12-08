@@ -4,6 +4,7 @@ import fcup.pdm.myapp.model.Movie;
 import fcup.pdm.myapp.model.Genre;
 import fcup.pdm.myapp.model.MovieLink;
 import fcup.pdm.myapp.util.DBConnection;
+import fcup.pdm.myapp.util.VideoConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -258,11 +259,18 @@ public class AdminDAO {
                 return false;
             }
 
-            List<MovieLink> links = movie.getLinks();
-            for (MovieLink link : links) {
-                if (!addMovieLink(movieId, link)) {
-                    return false;
-                }
+            MovieLink link = movie.getMovieLink();
+            if (!addMovieLink(movieId, link)) {
+                return false;
+            }
+
+            boolean conversionSuccess = VideoConverter.convertToHLS(
+                    movie.getMovieLink().getLink(),
+                    movieId,
+                    movie.getMovieLink().getResolution());
+
+            if(!conversionSuccess){
+                return false;
             }
 
             return true;
