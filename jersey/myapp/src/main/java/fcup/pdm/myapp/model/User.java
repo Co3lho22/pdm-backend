@@ -1,6 +1,7 @@
 package fcup.pdm.myapp.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * The User class represents a user entity with various attributes.
@@ -14,6 +15,8 @@ public class User {
     private String country;
     private String phone;
     private Timestamp dateCreated;
+
+    private Role role;
 
     /**
      * Default constructor for the User class.
@@ -153,4 +156,20 @@ public class User {
     public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
+
+    /**
+     * Get the roles for this user.
+     *
+     * @return The timestamp of user creation.
+     */
+    public Role getRole() {
+        return role;
+    }
+
+    /**
+     * Set the roles for this user.
+     *
+     * @param role The role to add to the user.
+     */
+    public void setRole(Role role) {this.role = role;}
 }

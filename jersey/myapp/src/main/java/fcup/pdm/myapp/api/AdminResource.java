@@ -30,14 +30,13 @@ public class AdminResource {
      *
      * @param authHeader The authorization header containing a JWT token.
      * @param movie      The movie object to be added.
-     * @param genreId    The ID of the genre associated with the movie.
      * @return A response indicating whether the movie was added successfully or not.
      */
     @POST
     @Path("/addMovie")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addMovie(@HeaderParam("Authorization") String authHeader, Movie movie, @QueryParam("genreId") int genreId) {
+    public Response addMovie(@HeaderParam("Authorization") String authHeader, Movie movie) {
         if (!isAuthorized(authHeader, AppConstants.PERMISSION_WRITE)) {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
         }
@@ -47,11 +46,11 @@ public class AdminResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Movie is not complete").build();
         }
 
-        if (adminDAO.addMovie(movie, genreId)) {
+        if (adminDAO.addMovie(movie)) {
             logger.info("Movie added successfully: {}", movie.getTitle());
             return Response.ok().entity("Movie added successfully").build();
         } else {
-            logger.error("Error adding movie with movie Title {} and genreId {} ", movie.getTitle(), genreId);
+            logger.error("Error adding movie with movie Title {} and genreId {} ", movie.getTitle(), movie.getGenresIds());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding movie").build();
         }
     }
@@ -118,7 +117,6 @@ public class AdminResource {
      *
      * @param authHeader      The authorization header containing a JWT token.
      * @param user            The user class with the user metadata.
-     * @param roleName        The role of the new user.
      * @return A response indicating whether the user was added successfully or not.
      */
     @POST
@@ -126,8 +124,7 @@ public class AdminResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(@HeaderParam("Authorization") String authHeader,
-                            User user,
-                            @QueryParam("roleName") String roleName) {
+                            User user) {
 
         if (!isAuthorized(authHeader, AppConstants.PERMISSION_WRITE)) {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
@@ -141,7 +138,7 @@ public class AdminResource {
         }
 
         if (adminDAO.addUser(user.getUsername(), user.getHashedPassword(), user.getEmail(), user.getCountry(),
-                user.getPhone(), roleName)) {
+                user.getPhone(), user.getRole().getName())) {
             logger.info("User added successfully with username: {}", user.getUsername());
             return Response.ok().entity("User added successfully").build();
         } else {

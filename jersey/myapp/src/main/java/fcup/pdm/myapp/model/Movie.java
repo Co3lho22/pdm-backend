@@ -3,6 +3,7 @@ package fcup.pdm.myapp.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Movie class represents a movie entity with various attributes such as ID, title, genre, duration, rating,
@@ -17,6 +18,7 @@ public class Movie {
     private String description;
 
     private List<MovieLink> links;
+    private List<Genre> genres;
 
     /**
      * Default constructor for the Movie class.
@@ -131,6 +133,33 @@ public class Movie {
      */
     public List<MovieLink> getLinks() {
         return links;
+    }
+
+    /**
+     * Add a Genre object to the list of genres associated with this movie.
+     *
+     * @param  genre The Genre object to be added to the list of genres.
+     */
+    public void addGenre(Genre genre) {
+        this.genres.add(genre);
+    }
+
+    /**
+     * Get the list of genres associated with this movie.
+     *
+     * @return A list of Genres objects representing genres related to this movie.
+     */
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    /**
+     * Get the list of genreIds associated with this movie.
+     *
+     * @return A list of Integers objects representing genreIds related to this movie.
+     */
+    public List<Integer> getGenresIds(){
+        return getGenres().stream().map(Genre::getId).collect(Collectors.toList());
     }
 
     /**

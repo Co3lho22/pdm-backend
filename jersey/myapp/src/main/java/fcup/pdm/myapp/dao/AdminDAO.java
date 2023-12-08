@@ -1,6 +1,7 @@
 package fcup.pdm.myapp.dao;
 
 import fcup.pdm.myapp.model.Movie;
+import fcup.pdm.myapp.model.Genre;
 import fcup.pdm.myapp.model.MovieLink;
 import fcup.pdm.myapp.util.DBConnection;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class provides data access methods for administrative operations.
@@ -213,10 +216,9 @@ public class AdminDAO {
      * Adds a new movie and links it to a genre.
      *
      * @param movie   The movie object to be added.
-     * @param genreId The ID of the genre to link the movie to.
      * @return True if the movie was added and linked successfully; otherwise, false.
      */
-    public boolean addMovie(Movie movie, int genreId) {
+    public boolean addMovie(Movie movie) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -251,7 +253,8 @@ public class AdminDAO {
 
             connection.commit();
 
-            if (!linkMovieWithGenre(movieId, genreId)) {
+            List<Integer> genreIds = movie.getGenresIds();
+            if (!linkMovieWithGenre(movieId, genreIds)) {
                 return false;
             }
 
@@ -413,22 +416,25 @@ public class AdminDAO {
      * Links a movie with a genre in the database.
      *
      * @param movieId The ID of the movie to be linked.
-     * @param genreId The ID of the genre to link the movie to.
+     * @param genreIds The IDs of the genre to link the movie to.
      * @return True if the movie was linked to the genre successfully; otherwise, false.
      */
-    private boolean linkMovieWithGenre(int movieId, int genreId) {
+    private boolean linkMovieWithGenre(int movieId, List<Integer> genreIds) {
         String query = "INSERT INTO MOVIE_GENRES (movie_id, genre_id) VALUES (?, ?)";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
+            for(Integer genreId : genreIds) {
+                ps.setInt(1, movieId);
+                ps.setInt(2, genreId);
+                ps.addBatch();
+            }
 
-            ps.setInt(1, movieId);
-            ps.setInt(2, genreId);
-            int rowsAffected = ps.executeUpdate();
-
-            logger.info("Linked movie with id={} with genre with id={} successfully", movieId, genreId);
-            return rowsAffected > 0;
+        int[] rowsAffected = ps.executeBatch();
+        boolean success = Arrays.stream(rowsAffected).sum() == genreIds.size();
+        logger.info("Linked movie with id = {} with genre with id/s = {} successfully", movieId, genreIds);
+        return success;
         } catch (Exception e) {
-            logger.error("Error linking movie with id={} with genre with id={}", movieId, genreId, e);
+            logger.error("Error linking movie with id={} with genre/s with id/s= {}", movieId, genreIds, e);
             return false;
         }
     }
