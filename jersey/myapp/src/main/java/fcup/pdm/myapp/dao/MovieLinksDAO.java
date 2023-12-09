@@ -42,4 +42,10 @@ public class MovieLinksDAO {
         return true;
     }
 
+    public String getConversionStatus(int movieId, String resolution) {
+        // Implement logic to check the conversion status in the database
+        // Return "pending", "completed", or "failed"
+        return "pending"; // Example
+    }
+
 }
