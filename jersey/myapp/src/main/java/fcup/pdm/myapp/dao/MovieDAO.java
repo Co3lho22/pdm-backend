@@ -130,4 +130,28 @@ public class MovieDAO {
         return movies;
     }
 
+    /**
+     * Retrieves a movie by its ID from the database.
+     *
+     * @param id The ID of the movie to retrieve.
+     * @return A Movie object representing the retrieved movie, or null if not found.
+     */
+    public Movie movieAlready(int id) {
+        String query = "SELECT * FROM MOVIES WHERE id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                logger.info("Got movie by id successfully with movie id: {}", id);
+                return extractMovieFromResultSet(rs);
+            }
+        } catch (Exception e) {
+            logger.error("Error getting movie by id with movie id: {}", id, e);
+        }
+        return null;
+    }
+
 }

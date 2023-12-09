@@ -267,14 +267,16 @@ public class AdminDAO {
                 }
             }
 
-//            boolean conversionSuccess = VideoConverter.convertToHLS(
-//                    movie.getMovieLink().getLink(),
-//                    movieId,
-//                    movie.getMovieLink().getResolution());
-//
-//            if(!conversionSuccess){
-//                return false;
-//            }
+            String movie_link = movie.getLinks().get(0).getLink();
+            String movie_resolution = movie.getLinks().get(0).getResolution();
+            boolean conversionSuccess = VideoConverter.convertToHLS(
+                    movie_link,
+                    movieId,
+                    movie_resolution);
+
+            if(!conversionSuccess){
+                return false;
+            }
 
             return true;
         } catch (Exception e) {
