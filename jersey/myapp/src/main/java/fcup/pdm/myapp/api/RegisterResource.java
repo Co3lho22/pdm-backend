@@ -46,7 +46,7 @@ public class RegisterResource {
                 user.setId(userDao.getUserIDByUsername(user.getUsername()));
 
                 String jsonResponse = String.format("{\"message\":\"Registration Successful\"," +
-                        " \"userId:%d}", user.getId());
+                        " \"userId\":%d}", user.getId());
                 return Response.ok().entity(jsonResponse).build();
             } else {
                 logger.info("Registration failed for user: " + user.getUsername());
