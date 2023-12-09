@@ -42,9 +42,14 @@ public class RegisterResource {
         try {
             if (userDao.addUser(user)) {
                 logger.info("Registration successful for user: " + user.getUsername());
-                return Response.ok().entity("Registration Successful").build();
+
+                user.setId(userDao.getUserIDByUsername(user.getUsername()));
+
+                String jsonResponse = String.format("{\"message\":\"Registration Successful\"," +
+                        " \"userId\":%d}", user.getId());
+                return Response.ok().entity(jsonResponse).build();
             } else {
-                logger.info("Registration successful for user: " + user.getUsername());
+                logger.info("Registration failed for user: " + user.getUsername());
                 return Response.status(Response.Status.BAD_REQUEST).entity("Registration Failed").build();
             }
         }catch(Exception e){

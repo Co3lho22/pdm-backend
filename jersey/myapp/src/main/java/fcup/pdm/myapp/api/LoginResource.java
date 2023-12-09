@@ -54,7 +54,12 @@ public class LoginResource {
 
                 logger.info("Login successful for user: {}", user.getUsername());
 
-                return Response.ok().entity("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}").build();
+                user.setId(userDao.getUserIDByUsername(user.getUsername()));
+
+                String jsonResponse = String.format("{\"userId\":%d, \"accessToken\":\"%s\", \"refreshToken\":\"%s\"}",
+                        user.getId(), accessToken, refreshToken);
+
+                return Response.ok().entity(jsonResponse).build();
             } else {
                 logger.warn("Login failed for user: {}", user.getUsername());
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
