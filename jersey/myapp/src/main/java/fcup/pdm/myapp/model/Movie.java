@@ -16,7 +16,7 @@ public class Movie {
     private float rating;
     private Date release_date;
     private String description;
-    private MovieLink movie_link;
+    private List<MovieLink> links;
     private List<Genre> genres;
 
     /**
@@ -29,7 +29,7 @@ public class Movie {
         this.rating = -1.0f;
         this.release_date = null;
         this.description = null;
-        this.movie_link = new MovieLink();
+        this.links = new ArrayList<>();
         this.genres = new ArrayList<>();
     }
 
@@ -120,17 +120,17 @@ public class Movie {
     /**
      * Add a MovieLink object to the list of links associated with this movie.
      *
-     * @param movie_link The MovieLink object to be added to the list of links.
+     * @param link The MovieLink object to be added to the list of links.
      */
-    public void addMovieLink(MovieLink movie_link) { this.movie_link = movie_link; }
+    public void addMovieLink(MovieLink link) { this.links.add(link); }
 
     /**
      * Get the list of links associated with this movie.
      *
      * @return A list of MovieLink objects representing links related to this movie.
      */
-    public MovieLink getMovieLink() {
-        return movie_link;
+    public List<MovieLink> getLinks() {
+        return links;
     }
 
     /**
@@ -171,7 +171,7 @@ public class Movie {
         if(rating < 0) return false;
         if(release_date == null) return false;
         if(description == null || description.isEmpty()) return false;
-        if(movie_link == null) return false;
+        if(links == null || links.isEmpty()) return false;
         return true;
     }
 

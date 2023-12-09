@@ -259,19 +259,22 @@ public class AdminDAO {
                 return false;
             }
 
-            MovieLink link = movie.getMovieLink();
-            if (!addMovieLink(movieId, link)) {
-                return false;
+
+            List<MovieLink> links = movie.getLinks();
+            for (MovieLink link : links) {
+                if (!addMovieLink(movieId, link)) {
+                    return false;
+                }
             }
 
-            boolean conversionSuccess = VideoConverter.convertToHLS(
-                    movie.getMovieLink().getLink(),
-                    movieId,
-                    movie.getMovieLink().getResolution());
-
-            if(!conversionSuccess){
-                return false;
-            }
+//            boolean conversionSuccess = VideoConverter.convertToHLS(
+//                    movie.getMovieLink().getLink(),
+//                    movieId,
+//                    movie.getMovieLink().getResolution());
+//
+//            if(!conversionSuccess){
+//                return false;
+//            }
 
             return true;
         } catch (Exception e) {
