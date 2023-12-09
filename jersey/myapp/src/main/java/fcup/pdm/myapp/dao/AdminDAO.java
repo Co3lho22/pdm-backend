@@ -239,6 +239,8 @@ public class AdminDAO {
 
             if (rowsAffected == 0) {
                 connection.rollback();
+                logger.warn("1");
+
                 return false;
             }
 
@@ -248,6 +250,7 @@ public class AdminDAO {
                     movieId = generatedKeys.getInt(1);
                 } else {
                     connection.rollback();
+                    logger.warn("2");
                     return false;
                 }
             }
@@ -256,6 +259,8 @@ public class AdminDAO {
 
             List<Integer> genreIds = movie.getGenresIds();
             if (!linkMovieWithGenre(movieId, genreIds)) {
+                logger.warn("3");
+
                 return false;
             }
 
@@ -263,6 +268,7 @@ public class AdminDAO {
             List<MovieLink> links = movie.getLinks();
             for (MovieLink link : links) {
                 if (!addMovieLink(movieId, link)) {
+                    logger.warn("4");
                     return false;
                 }
             }
@@ -275,6 +281,7 @@ public class AdminDAO {
                     movie_resolution);
 
             if(!conversionSuccess){
+                logger.warn("5");
                 return false;
             }
 
