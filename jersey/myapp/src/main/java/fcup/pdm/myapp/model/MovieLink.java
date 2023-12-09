@@ -6,6 +6,7 @@ package fcup.pdm.myapp.model;
  * format, and hash value.
  */
 public class MovieLink {
+    private int movieId;
     private String link;
     private String resolution;
     private String format;
@@ -23,12 +24,30 @@ public class MovieLink {
      * @param hash       The hash value of the video link.
      */
     public MovieLink(String link, String resolution, String format, String hash) {
+        this.movieId = movieId;
         this.link = link;
         this.resolution = resolution;
         this.format = format;
         this.hash = hash;
     }
 
+    /**
+     * Set the movieId associated with the movie link.
+     *
+     * @param movieId The movieId for this link to set.
+     */
+    public void setMovieId(int movieId ) {
+        this.movieId = movieId;
+    }
+
+    /**
+     * Get the movieId associated with the movie link.
+     *
+     * @return The movieId for the link.
+     */
+    public int getMovieId() {
+        return movieId;
+    }
 
     /**
      * Set the URL link associated with the movie.

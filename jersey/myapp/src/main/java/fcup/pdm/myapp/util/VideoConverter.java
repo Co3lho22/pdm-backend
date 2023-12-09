@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The VideoConverter class provides a utility for converting video files to HLS format using FFmpeg.
@@ -16,39 +18,71 @@ public class VideoConverter {
 
     private static final Logger logger = LogManager.getLogger(DBConnection.class);
 
-    /**
-     * Converts a video file to HLS format.
-     *
-     * @param inputFilePath The path to the input video file.
-     * @param movieId       The unique identifier for the movie.
-     * @param resolution    The desired resolution for the HLS output.
-     * @return true if the conversion is successful, false otherwise.
-     */
-//    public static boolean convertToHLS(String inputFilePath, int movieId, String resolution) {
-//        logger.info("Creating the .m3u8 file for the movieId " + movieId + " with the resolution " + resolution);
-//
+//    /**
+//     * Converts a video file to HLS format.
+//     *
+//     * @param inputFilePath The path to the input video file.
+//     * @param movieId       The unique identifier for the movie.
+//     * @param resolution    The desired resolution for the HLS output.
+//     * @return true if the conversion is successful, false otherwise.
+//     */
+//    public static String convertToHLS(String inputFilePath, int movieId, String resolution) {
 //        String outputDirectory = AppConstants.HLS_OUTPUT_PATH;
 //        String outputFileName = movieId + "_" + resolution;
+//        String outputFilePath = outputDirectory + "/" + outputFileName + ".m3u8";
+//        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
+//                "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
 //
-//        ProcessBuilder processBuilder = new ProcessBuilder();
-//        processBuilder.command("ffmpeg", "-i", inputFilePath, "-codec: copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputDirectory + "/" + outputFileName + ".m3u8");
+//        logger.info("Executing command: " + String.join(" ", command));
 //
+//        ProcessBuilder processBuilder = new ProcessBuilder(command);
+//        processBuilder.redirectErrorStream(true);
 //
 //        try {
 //            Process process = processBuilder.start();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                logger.info(line);
+//            }
 //            int exitCode = process.waitFor();
-//            logger.info("Successfully created the .m3u8 file for the movieId " + movieId + " with the resolution " + resolution);
-//            logger.warn("exitCode: " + exitCode);
-//            return exitCode == 0;
+//            if(exitCode == 0){
+//                return outputFilePath;
+//            }
 //        } catch (IOException | InterruptedException e) {
-//            logger.error("Error closing Cassandra session", e);
-//            return false;
+//            logger.error("Error executing FFmpeg command", e);
 //        }
+//        return null;
 //    }
-    public static boolean convertToHLS(String inputFilePath, int movieId, String resolution) {
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    public interface ConversionCallback {
+        void onSuccess(String outputFilePath);
+        void onFailure(Exception e);
+    }
+
+    public static void convertToHLS(String inputFilePath, int movieId, String resolution, ConversionCallback callback) {
+        executorService.submit(() -> {
+            try {
+                // Conversion logic here
+                String outputFilePath = executeFFmpegCommand(inputFilePath, movieId, resolution);
+                if (outputFilePath != null) {
+                    callback.onSuccess(outputFilePath);
+                } else {
+                    callback.onFailure(new RuntimeException("Conversion failed"));
+                }
+            } catch (Exception e) {
+                callback.onFailure(e);
+            }
+        });
+    }
+
+    private static String executeFFmpegCommand(String inputFilePath, int movieId, String resolution) {
         String outputDirectory = AppConstants.HLS_OUTPUT_PATH;
         String outputFileName = movieId + "_" + resolution;
-        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputDirectory + "/" + outputFileName + ".m3u8");
+        String outputFilePath = outputDirectory + "/" + outputFileName + ".m3u8";
+        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
+                "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
+
 
         logger.info("Executing command: " + String.join(" ", command));
 
@@ -63,12 +97,13 @@ public class VideoConverter {
                 logger.info(line);
             }
             int exitCode = process.waitFor();
-            return exitCode == 0;
+            if(exitCode == 0){
+                return outputFilePath;
+            }
         } catch (IOException | InterruptedException e) {
             logger.error("Error executing FFmpeg command", e);
-            return false;
         }
+        return null;
     }
-
 }
 

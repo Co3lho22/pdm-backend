@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class provides data access methods for administrative operations.
@@ -239,8 +238,6 @@ public class AdminDAO {
 
             if (rowsAffected == 0) {
                 connection.rollback();
-                logger.warn("1");
-
                 return false;
             }
 
@@ -250,7 +247,6 @@ public class AdminDAO {
                     movieId = generatedKeys.getInt(1);
                 } else {
                     connection.rollback();
-                    logger.warn("2");
                     return false;
                 }
             }
@@ -259,8 +255,6 @@ public class AdminDAO {
 
             List<Integer> genreIds = movie.getGenresIds();
             if (!linkMovieWithGenre(movieId, genreIds)) {
-                logger.warn("3");
-
                 return false;
             }
 
@@ -268,21 +262,8 @@ public class AdminDAO {
             List<MovieLink> links = movie.getLinks();
             for (MovieLink link : links) {
                 if (!addMovieLink(movieId, link)) {
-                    logger.warn("4");
                     return false;
                 }
-            }
-
-            String movie_link = movie.getLinks().get(0).getLink();
-            String movie_resolution = movie.getLinks().get(0).getResolution();
-            boolean conversionSuccess = VideoConverter.convertToHLS(
-                    movie_link,
-                    movieId,
-                    movie_resolution);
-
-            if(!conversionSuccess){
-                logger.warn("5");
-                return false;
             }
 
             return true;
