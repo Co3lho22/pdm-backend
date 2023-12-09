@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The VideoConverter class provides a utility for converting video files to HLS format using FFmpeg.
@@ -44,38 +46,29 @@ public class VideoConverter {
 //        }
 //    }
     public static boolean convertToHLS(String inputFilePath, int movieId, String resolution) {
-        logger.info("Creating the .m3u8 file for the movieId " + movieId + " with the resolution " + resolution);
-
         String outputDirectory = AppConstants.HLS_OUTPUT_PATH;
         String outputFileName = movieId + "_" + resolution;
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("ffmpeg", "-i", inputFilePath, "-codec: copy", "-start_number", "0", "-hls_time", "10",
-                "-hls_list_size", "0", "-f", "hls", outputDirectory + "/" + outputFileName + ".m3u8");
-        processBuilder.redirectErrorStream(true); // Redirect error stream to standard output
+        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputDirectory + "/" + outputFileName + ".m3u8");
+
+        logger.info("Executing command: " + String.join(" ", command));
+
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        processBuilder.redirectErrorStream(true);
 
         try {
             Process process = processBuilder.start();
-
-            // Read and log output from the process
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    logger.info(line);
-                }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                logger.info(line);
             }
-
             int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                logger.info("Successfully created the .m3u8 file for the movieId " + movieId + " with the resolution " + resolution);
-                return true;
-            } else {
-                logger.error("FFmpeg exited with error code: " + exitCode);
-                return false;
-            }
+            return exitCode == 0;
         } catch (IOException | InterruptedException e) {
             logger.error("Error executing FFmpeg command", e);
             return false;
         }
     }
+
 }
 
