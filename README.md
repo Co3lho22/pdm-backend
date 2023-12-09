@@ -173,6 +173,30 @@ Example Response (json):
 
     "Registration Successful"
 
+## Update User Data
+    Endpoint: /user/update
+    Method: POST
+
+Example Request (json):
+
+    POST //user/update
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+
+    {
+    "username": "new_user",
+    "password": "newpassword",
+    "email": "newuser@example.com",
+    "phone": "21323142134",
+    "country": "Portugal"
+    }
+
+Example Response (json):
+
+    {
+    "message":"User data updated successfully"
+    }
+
 ## Refresh Token
 
     Endpoint: /refresh

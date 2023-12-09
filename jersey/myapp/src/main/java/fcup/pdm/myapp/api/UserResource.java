@@ -32,13 +32,17 @@ public class UserResource {
         try{
             UserDAO userDAO = new UserDAO();
             if (userDAO.updateUserDataSetting(user)) {
-                return Response.ok().entity("User data updated successfully").build();
+                String jsonResponse = "{\"message\":\"User data updated successfully\"}";
+                return Response.ok().entity(jsonResponse).build();
             } else {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error updating user data").build();
+                String jsonResponse = "{\"message\":\"Error updating user data\"}";
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse).build();
             }
         }catch (Exception e){
             logger.error("Error updating data via setting for user: {}", user.getUsername());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding movie").build();
+
+            String jsonResponse = "{\"message\":\"Error updating user data\"}";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse).build();
 
         }
     }
