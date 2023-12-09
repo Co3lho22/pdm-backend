@@ -33,6 +33,7 @@ public class VideoConverter {
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
             logger.info("Successfully created the .m3u8 file for the movieId " + movieId + " with the resolution " + resolution);
+            logger.warn("exitCode: " + exitCode);
             return exitCode == 0;
         } catch (IOException | InterruptedException e) {
             logger.error("Error closing Cassandra session", e);
