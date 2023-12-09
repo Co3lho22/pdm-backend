@@ -241,5 +241,29 @@ public class UserDAO {
 
         return roles;
     }
+
+    /**
+     * Updates user data using settings.
+     *
+     * @param user The User object containing updated user data.
+     * @return true if the user data is successfully updated, false otherwise.
+     */
+    public boolean updateUserDataSetting(User user) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("UPDATE USERS " +
+                     "SET email = ?, country = ?, phone = ? WHERE username = ?")) {
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getCountry());
+            ps.setString(3, user.getPhone());
+            ps.setString(4, user.getUsername());
+
+            int rowsAffected = ps.executeUpdate();
+            logger.info("Success updating user data using settings with username: {}", user.getUsername());
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            logger.error("Error updating user data using settings with username: {}", user.getUsername(), e);
+            return false;
+        }
+    }
 }
 
