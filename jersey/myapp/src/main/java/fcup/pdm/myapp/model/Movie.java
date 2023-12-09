@@ -16,7 +16,6 @@ public class Movie {
     private float rating;
     private Date release_date;
     private String description;
-
     private MovieLink movie_link;
     private List<Genre> genres;
 
@@ -31,6 +30,7 @@ public class Movie {
         this.release_date = null;
         this.description = null;
         this.movie_link = new MovieLink();
+        this.genres = new ArrayList<>();
     }
 
     /**
