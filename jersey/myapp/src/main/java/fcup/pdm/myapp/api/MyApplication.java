@@ -26,7 +26,8 @@ public class MyApplication extends Application {
         classes.add(MovieResource.class);
         classes.add(RefreshTokenResource.class);
         classes.add(AdminResource.class);
-
+        classes.add(StreamResource.class);
+        classes.add(UserResource.class);
 
         return classes;
     }
