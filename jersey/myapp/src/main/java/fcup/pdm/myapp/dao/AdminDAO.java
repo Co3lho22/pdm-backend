@@ -1,10 +1,8 @@
 package fcup.pdm.myapp.dao;
 
 import fcup.pdm.myapp.model.Movie;
-import fcup.pdm.myapp.model.Genre;
 import fcup.pdm.myapp.model.MovieLink;
 import fcup.pdm.myapp.util.DBConnection;
-import fcup.pdm.myapp.util.VideoConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
