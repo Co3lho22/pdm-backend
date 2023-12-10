@@ -31,6 +31,25 @@ public class MovieLinksCassandraDAO {
         return null;
     }
 
+    public boolean isMovieLinkInCassandra(String m3u8FilePath) {
+        String query = "SELECT movie_id FROM movie_links WHERE hls_url = ?";
+        try {
+            PreparedStatement preparedStatement = CassandraConnection.getSession().prepare(query);
+            ResultSet rs = CassandraConnection.getSession().execute(preparedStatement.bind(m3u8FilePath));
+
+            if (rs.one() != null) {
+                logger.info("Movie link exists with resolution = {}", m3u8FilePath);
+                return true;
+            } else {
+                logger.info("Movie link does not exist with resolution = {}",m3u8FilePath);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Error checking movie link with resolution = {}", m3u8FilePath, e);
+            return false;
+        }
+    }
+
     public boolean setMovieLinkInCassandra(int movie_id, String resolution, String m3u8FilePath){
         String query = "INSERT INTO movie_links (movie_id, resolution, hls_url) VALUES (?, ?, ?)";
         try {
