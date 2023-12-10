@@ -1,6 +1,5 @@
 # Overview of the Backend Structure:
-The backend is structured to efficiently manage a movie streaming service. The project is developed using Jersey in Java and interacts with two databases: MariaDB and Cassandra.
-
+The backend, developed by Diogo Coelho, is structured to efficiently manage a movie streaming service. The project is developed using Jersey in Java and interacts with two databases: MariaDB and Cassandra. The frontend of the application was developed by João Silva, complementing the backend functionalities. You can access the code for the frontend [HERE].
 ### API Layer (api package): 
 
 This layer defines RESTful endpoints in classes like AdminResource, FavoriteResource, and LoginResource. Each class deals with different aspects of the application, such as user authentication and movie streaming.
