@@ -278,7 +278,7 @@ public class UserDAO {
      */
     public User getUserSettingData(int userId) {
         User user = null;
-        String query = "SELECT username, email, country, phone FROM USERS WHERE userId = ?";
+        String query = "SELECT username, email, country, phone FROM USERS WHERE id = ?";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 

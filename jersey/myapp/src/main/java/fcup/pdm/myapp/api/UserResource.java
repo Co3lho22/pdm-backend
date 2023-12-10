@@ -58,7 +58,7 @@ public class UserResource {
             UserDAO userDAO = new UserDAO();
             User userSettings = userDAO.getUserSettingData(userId);
             if (userSettings != null) {
-                String jsonResponse = String.format("{\"username\":\"%s\", \"email\":\"%s\", \"country\":\"%s\", \"phone\":\"%s\"}",
+                String jsonResponse = String.format("{\"username\":\"%s\", \"email\":\"%s\", \"country\":\"%s\", \"pho ne\":\"%s\"}",
                         userSettings.getUsername(), userSettings.getEmail(), userSettings.getCountry(), userSettings.getPhone());
                 return Response.ok().entity(jsonResponse).build();
             } else {
