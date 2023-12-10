@@ -26,7 +26,7 @@ public class CassandraConnection {
                     .addContactPoint(new InetSocketAddress(props.getProperty("db_Cassandra.ip"),
                             Integer.parseInt(props.getProperty("db_Cassandra.port"))))
                     .withLocalDatacenter(props.getProperty("db_Cassandra.data_center")) // Replace with your data center name
-                    .withKeyspace("db_Cassandra.keyspace_name")
+                    .withKeyspace(props.getProperty("db_Cassandra.keyspace_name"))
                     .build();
             logger.info("Cassandra connection established successfully");
 
