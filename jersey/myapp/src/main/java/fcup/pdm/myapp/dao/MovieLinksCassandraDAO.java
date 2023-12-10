@@ -38,14 +38,14 @@ public class MovieLinksCassandraDAO {
             ResultSet rs = CassandraConnection.getSession().execute(preparedStatement.bind(m3u8FilePath));
 
             if (rs.one() != null) {
-                logger.info("Movie link exists with resolution = {}", m3u8FilePath);
+                logger.info("hls_url exists with resolution = {}", m3u8FilePath);
                 return true;
             } else {
-                logger.info("Movie link does not exist with resolution = {}",m3u8FilePath);
+                logger.info("hls_url does not exist with resolution = {}",m3u8FilePath);
                 return false;
             }
         } catch (Exception e) {
-            logger.error("Error checking movie link with resolution = {}", m3u8FilePath, e);
+            logger.error("Error checking hls_url with resolution = {}", m3u8FilePath, e);
             return false;
         }
     }
@@ -54,8 +54,7 @@ public class MovieLinksCassandraDAO {
         String query = "INSERT INTO movie_links (movie_id, resolution, hls_url) VALUES (?, ?, ?)";
         try {
             PreparedStatement preparedStatement = CassandraConnection.getSession().prepare(query);
-            UUID uuid = UUID.randomUUID();
-            CassandraConnection.getSession().execute(preparedStatement.bind(uuid, resolution, m3u8FilePath));
+            CassandraConnection.getSession().execute(preparedStatement.bind(movie_id, resolution, m3u8FilePath));
 
             logger.info("Successfully inserted movie link for movieId = {} with resolution = {}", movie_id, resolution);
             return true;
