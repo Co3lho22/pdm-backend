@@ -1,5 +1,6 @@
 package fcup.pdm.myapp.util;
 
+import fcup.pdm.myapp.dao.MovieLinksDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,15 +63,19 @@ public class VideoConverter {
 
     public static void convertToHLS(String inputFilePath, int movieId, String resolution, ConversionCallback callback) {
         executorService.submit(() -> {
+            MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
             try {
-                // Conversion logic here
+                movieLinksDAO.updateConversionStatus(movieId, resolution, "pending");
                 String outputFilePath = executeFFmpegCommand(inputFilePath, movieId, resolution);
                 if (outputFilePath != null) {
+                    movieLinksDAO.updateConversionStatus(movieId, resolution, "completed");
                     callback.onSuccess(outputFilePath);
                 } else {
+                    movieLinksDAO.updateConversionStatus(movieId, resolution, "failed");
                     callback.onFailure(new RuntimeException("Conversion failed"));
                 }
             } catch (Exception e) {
+                movieLinksDAO.updateConversionStatus(movieId, resolution, "failed");
                 callback.onFailure(e);
             }
         });

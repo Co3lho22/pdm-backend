@@ -70,11 +70,32 @@ public class MovieLinksDAO {
         }
     }
 
-
     public String getConversionStatus(int movieId, String resolution) {
-        // Implement logic to check the conversion status in the database
-        // Return "pending", "completed", or "failed"
-        return "pending"; // Example
+        String query = "SELECT conversion_status FROM movie_links WHERE movie_id = ? AND resolution = ?";
+        try {
+            PreparedStatement preparedStatement = CassandraConnection.getSession().prepare(query);
+            ResultSet rs = CassandraConnection.getSession().execute(preparedStatement.bind(movieId, resolution));
+
+            Row row = rs.one();
+            if (row != null) {
+                logger.info("Successfully retrieved conversion status for movieId = {} and resolution = {}", movieId, resolution);
+                return row.getString("conversion_status");
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving conversion status for movieId = {} and resolution = {}", movieId, resolution, e);
+        }
+        return "pending";
     }
 
+    public static void updateConversionStatus(int movieId, String resolution, String status) {
+        String query = "UPDATE movie_links SET conversion_status = ? WHERE movie_id = ? AND resolution = ?";
+        try {
+            CqlSession session = CassandraConnection.getSession();
+            PreparedStatement preparedStatement = session.prepare(query);
+            session.execute(preparedStatement.bind(status, movieId, resolution));
+            logger.info("Updated conversion status to {} for movieId = {} and resolution = {}", status, movieId, resolution);
+        } catch (Exception e) {
+            logger.error("Error updating conversion status for movieId = {} and resolution = {}", movieId, resolution, e);
+        }
+    }
 }

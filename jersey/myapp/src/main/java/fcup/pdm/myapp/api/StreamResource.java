@@ -54,11 +54,9 @@ public class StreamResource {
             } else {
                 String inputFilePath = movieLinksDAO.getMovieLink(movieId, resolution);
 
-                // Start conversion asynchronously
                 VideoConverter.convertToHLS(inputFilePath, movieId, resolution, new VideoConverter.ConversionCallback() {
                     @Override
                     public void onSuccess(String outputFilePath) {
-                        // Handle success, update database with new path
                         MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
                         movieLinksDAO.setMovieLinkInCassandra(movieId, resolution, outputFilePath);
                     }
