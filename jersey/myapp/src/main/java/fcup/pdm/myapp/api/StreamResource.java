@@ -1,5 +1,6 @@
 package fcup.pdm.myapp.api;
 
+import fcup.pdm.myapp.dao.MovieLinksCassandraDAO;
 import fcup.pdm.myapp.model.MovieLink;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -25,8 +26,8 @@ public class StreamResource {
         int movieId = movieLink.getMovieId();
         String resolution = movieLink.getResolution();
         try {
-            MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
-            String status = movieLinksDAO.getConversionStatus(movieId, resolution);
+            MovieLinksCassandraDAO  movieLinksCassandra = new MovieLinksCassandraDAO();
+            String status = movieLinksCassandra.getConversionStatus(movieId, resolution);
 
             String jsonResponse = String.format("{\"status\":\"%s\"}", status);
             return Response.ok().entity(jsonResponse).build();
@@ -45,20 +46,20 @@ public class StreamResource {
         int movieId = movieLink.getMovieId();
         String resolution = movieLink.getResolution();
         try {
-            MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
-            String m3u8FilePath = movieLinksDAO.getMoviePathFromCassandra(movieId, resolution);
+            MovieLinksCassandraDAO  movieLinksCassandra = new MovieLinksCassandraDAO();
+            String m3u8FilePath = movieLinksCassandra.getMoviePathFromCassandra(movieId, resolution);
 
             if (m3u8FilePath != null) {
                 String jsonResponse = String.format("{\"movieId\":%d, \"streamUrl\":\"%s\"}", movieId, m3u8FilePath);
                 return Response.ok().entity(jsonResponse).build();
             } else {
+                MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
                 String inputFilePath = movieLinksDAO.getMovieLink(movieId, resolution);
 
                 VideoConverter.convertToHLS(inputFilePath, movieId, resolution, new VideoConverter.ConversionCallback() {
                     @Override
                     public void onSuccess(String outputFilePath) {
-                        MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
-                        movieLinksDAO.setMovieLinkInCassandra(movieId, resolution, outputFilePath);
+                        movieLinksCassandra.setMovieLinkInCassandra(movieId, resolution, outputFilePath);
                     }
 
                     @Override
