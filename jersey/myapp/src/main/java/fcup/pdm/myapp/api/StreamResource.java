@@ -59,11 +59,8 @@ public class StreamResource {
                 VideoConverter.convertToHLS(inputFilePath, movieId, resolution, new VideoConverter.ConversionCallback() {
                     @Override
                     public void onSuccess(String outputFilePath) {
-                        if(movieLinksCassandra.isMovieLinkInCassandra(outputFilePath)){
-                            movieLinksCassandra.setMovieLinkInCassandra(movieId, resolution, outputFilePath);
-                        }
-                        logger.warn("The outputFilePath is already in cassandra " +
-                                "with outputFilePath: {}", outputFilePath);
+                        movieLinksCassandra.setMovieLinkInCassandra(movieId, resolution, outputFilePath);
+
                     }
 
                     @Override
