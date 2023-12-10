@@ -17,7 +17,7 @@ import fcup.pdm.myapp.dao.MovieLinksDAO;
 public class StreamResource {
     private static final Logger logger = LogManager.getLogger(StreamResource.class);
 
-    @GET
+    @POST
     @Path("/status")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

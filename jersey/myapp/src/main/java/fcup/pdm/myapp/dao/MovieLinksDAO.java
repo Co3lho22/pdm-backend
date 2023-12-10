@@ -1,12 +1,17 @@
 package fcup.pdm.myapp.dao;
 
+import fcup.pdm.myapp.util.CassandraConnection;
 import fcup.pdm.myapp.util.DBConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.datastax.oss.driver.api.core.cql.PreparedStatement;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.UUID;
 
 public class MovieLinksDAO {
     private static final Logger logger = LogManager.getLogger(AdminDAO.class);
@@ -34,13 +39,37 @@ public class MovieLinksDAO {
     }
 
     public String getMoviePathFromCassandra(int movie_id, String resolution){
+        String query = "SELECT hls_url FROM movie_links WHERE movie_id = ? AND resolution = ?";
+        try {
+            PreparedStatement preparedStatement = CassandraConnection.getSession().prepare(query);
+            ResultSet rs = CassandraConnection.getSession().execute(preparedStatement.bind(movie_id, resolution));
+
+            Row row = rs.one();
+            if (row != null) {
+                logger.info("Successfully retrieved HLS URL for movieId = {} and resolution = {}", movie_id, resolution);
+                return row.getString("hls_url");
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving HLS URL for movieId = {} and resolution = {}", movie_id, resolution, e);
+        }
         return null;
     }
 
     public boolean setMovieLinkInCassandra(int movie_id, String resolution, String m3u8FilePath){
-        // need to retrive the format TEXT, and title TEXT
-        return true;
+        String query = "INSERT INTO movie_links (movie_id, resolution, hls_url) VALUES (?, ?, ?)";
+        try {
+            PreparedStatement preparedStatement = CassandraConnection.getSession().prepare(query);
+            UUID uuid = UUID.randomUUID();
+            CassandraConnection.getSession().execute(preparedStatement.bind(uuid, resolution, m3u8FilePath));
+
+            logger.info("Successfully inserted movie link for movieId = {} with resolution = {}", movie_id, resolution);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error inserting movie link for movieId = {} with resolution = {}", movie_id, resolution, e);
+            return false;
+        }
     }
+
 
     public String getConversionStatus(int movieId, String resolution) {
         // Implement logic to check the conversion status in the database

@@ -8,6 +8,7 @@ import java.util.List;
 
 import fcup.pdm.myapp.util.DBConnection;
 import fcup.pdm.myapp.model.User;
+import fcup.pdm.myapp.util.PasswordUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -251,11 +252,15 @@ public class UserDAO {
     public boolean updateUserDataSetting(User user) {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("UPDATE USERS " +
-                     "SET email = ?, country = ?, phone = ? WHERE username = ?")) {
+                     "SET email = ?, country = ?, phone = ?, hashed_password = ? WHERE username = ?")) {
+
+            user.setHashedPassword(PasswordUtil.hashPassword(user.getPassword()));
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getCountry());
             ps.setString(3, user.getPhone());
-            ps.setString(4, user.getUsername());
+            ps.setString(4, user.getHashedPassword());
+            ps.setString(5, user.getUsername());
+
 
             int rowsAffected = ps.executeUpdate();
             logger.info("Success updating user data using settings with username: {}", user.getUsername());
