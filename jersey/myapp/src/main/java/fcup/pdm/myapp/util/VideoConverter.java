@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -83,9 +84,19 @@ public class VideoConverter {
     }
 
     private static String executeFFmpegCommand(String inputFilePath, int movieId, String resolution) {
-        String outputDirectory = AppConstants.HLS_OUTPUT_PATH;
         String outputFileName = movieId + "_" + resolution;
-        String outputFilePath = outputDirectory+ "/"+ outputFileName + "/" + outputFileName + ".m3u8";
+        String outputDirectory = AppConstants.HLS_OUTPUT_PATH + "/" + outputFileName;;
+        String outputFilePath = outputDirectory + "/" + outputFileName + ".m3u8";
+
+        File subDirectory = new File(outputDirectory);
+        if (!subDirectory.exists()) {
+            boolean dirCreated = subDirectory.mkdirs();
+            if (!dirCreated) {
+                logger.error("Failed to create directory: " + outputDirectory);
+                return null;
+            }
+        }
+
         List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
                 "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
 
