@@ -100,7 +100,6 @@ public class VideoConverter {
         List<String> command = Arrays.asList(
                 "ffmpeg", "-i", inputFilePath,
                 "-vf", scale, // Apply the scale filter for resolution
-                "-codec", "copy",
                 "-start_number", "0",
                 "-hls_time", "10",
                 "-hls_list_size", "0",
