@@ -1,5 +1,6 @@
 package fcup.pdm.myapp.util;
 
+import fcup.pdm.myapp.dao.MovieLinksCassandraDAO;
 import fcup.pdm.myapp.dao.MovieLinksDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,19 +64,19 @@ public class VideoConverter {
 
     public static void convertToHLS(String inputFilePath, int movieId, String resolution, ConversionCallback callback) {
         executorService.submit(() -> {
-            MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
+            MovieLinksCassandraDAO movieLinksCassandraDAO = new MovieLinksCassandraDAO();
             try {
-                movieLinksDAO.updateConversionStatus(movieId, resolution, "pending");
+                movieLinksCassandraDAO.updateConversionStatus(movieId, resolution, "pending");
                 String outputFilePath = executeFFmpegCommand(inputFilePath, movieId, resolution);
                 if (outputFilePath != null) {
-                    movieLinksDAO.updateConversionStatus(movieId, resolution, "completed");
+                    movieLinksCassandraDAO.updateConversionStatus(movieId, resolution, "completed");
                     callback.onSuccess(outputFilePath);
                 } else {
-                    movieLinksDAO.updateConversionStatus(movieId, resolution, "failed");
+                    movieLinksCassandraDAO.updateConversionStatus(movieId, resolution, "failed");
                     callback.onFailure(new RuntimeException("Conversion failed"));
                 }
             } catch (Exception e) {
-                movieLinksDAO.updateConversionStatus(movieId, resolution, "failed");
+                movieLinksCassandraDAO.updateConversionStatus(movieId, resolution, "failed");
                 callback.onFailure(e);
             }
         });
