@@ -18,6 +18,30 @@ import org.apache.logging.log4j.Logger;
 public class MovieDAO {
     private static final Logger logger = LogManager.getLogger(AdminDAO.class);
 
+    // Get all films with movieId and title and duration
+
+    /**
+     * Retrieves all movies from the database.
+     *
+     * @return A list of Movie objects representing all movies in the database.
+     */
+    public List<Movie> getAllMovieData() {
+        String query = "SELECT id, title, duration, rating, release_date, description FROM MOVIES";
+        List<Movie> movies = new ArrayList<>();
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                movies.add(extractMovieFromResultSet(rs));
+            }
+            logger.info("Retrieved all movies successfully");
+        } catch (Exception e) {
+            logger.error("Error retrieving all movies", e);
+        }
+        return movies;
+    }
+
     /**
      * Extracts a Movie object from the ResultSet.
      *

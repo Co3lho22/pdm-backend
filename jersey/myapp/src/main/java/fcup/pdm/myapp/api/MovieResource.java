@@ -82,4 +82,23 @@ public class MovieResource {
                     "tried to verify the login").build();
         }
     }
+
+    /**
+     * Retrieves all movies.
+     *
+     * @return A response containing a list of all movies.
+     */
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllMovies() {
+        try {
+            List<Movie> movies = movieDAO.getAllMovieData();
+            logger.info("Retrieved all movies successfully");
+            return Response.ok(movies).build();
+        } catch (Exception e) {
+            logger.error("Error retrieving all movies", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error on the server when tried to get all movies").build();
+        }
+    }
 }
