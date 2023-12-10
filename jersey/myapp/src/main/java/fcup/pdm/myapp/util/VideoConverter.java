@@ -1,7 +1,6 @@
 package fcup.pdm.myapp.util;
 
 import fcup.pdm.myapp.dao.MovieLinksCassandraDAO;
-import fcup.pdm.myapp.dao.MovieLinksDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,49 +19,36 @@ import java.util.concurrent.Executors;
 public class VideoConverter {
 
     private static final Logger logger = LogManager.getLogger(DBConnection.class);
-
-//    /**
-//     * Converts a video file to HLS format.
-//     *
-//     * @param inputFilePath The path to the input video file.
-//     * @param movieId       The unique identifier for the movie.
-//     * @param resolution    The desired resolution for the HLS output.
-//     * @return true if the conversion is successful, false otherwise.
-//     */
-//    public static String convertToHLS(String inputFilePath, int movieId, String resolution) {
-//        String outputDirectory = AppConstants.HLS_OUTPUT_PATH;
-//        String outputFileName = movieId + "_" + resolution;
-//        String outputFilePath = outputDirectory + "/" + outputFileName + ".m3u8";
-//        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
-//                "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
-//
-//        logger.info("Executing command: " + String.join(" ", command));
-//
-//        ProcessBuilder processBuilder = new ProcessBuilder(command);
-//        processBuilder.redirectErrorStream(true);
-//
-//        try {
-//            Process process = processBuilder.start();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                logger.info(line);
-//            }
-//            int exitCode = process.waitFor();
-//            if(exitCode == 0){
-//                return outputFilePath;
-//            }
-//        } catch (IOException | InterruptedException e) {
-//            logger.error("Error executing FFmpeg command", e);
-//        }
-//        return null;
-//    }
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    /**
+     * The ConversionCallback interface defines callbacks for the video conversion process.
+     */
     public interface ConversionCallback {
+
+        /**
+         * Called when video conversion is successful.
+         *
+         * @param outputFilePath The path to the converted video.
+         */
         void onSuccess(String outputFilePath);
+
+        /**
+         * Called when video conversion fails.
+         *
+         * @param e The exception representing the failure.
+         */
         void onFailure(Exception e);
     }
 
+    /**
+     * Converts a video file to HLS format asynchronously.
+     *
+     * @param inputFilePath The path to the input video file.
+     * @param movieId       The unique identifier for the movie.
+     * @param resolution    The desired resolution.
+     * @param callback      The callback to handle conversion success or failure.
+     */
     public static void convertToHLS(String inputFilePath, int movieId, String resolution, ConversionCallback callback) {
         executorService.submit(() -> {
             MovieLinksCassandraDAO movieLinksCassandraDAO = new MovieLinksCassandraDAO();
@@ -83,6 +69,14 @@ public class VideoConverter {
         });
     }
 
+    /**
+     * Executes an FFmpeg command to convert a video file to HLS format.
+     *
+     * @param inputFilePath The path to the input video file.
+     * @param movieId       The unique identifier for the movie.
+     * @param resolution    The desired resolution.
+     * @return The path to the converted video file in HLS format, or null if conversion fails.
+     */
     private static String executeFFmpegCommand(String inputFilePath, int movieId, String resolution) {
         String outputFileName = movieId + "_" + resolution;
         String outputDirectory = AppConstants.HLS_OUTPUT_PATH + "/" + outputFileName;;

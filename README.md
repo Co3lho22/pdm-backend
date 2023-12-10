@@ -197,6 +197,89 @@ Example Response (json):
     "message":"User data updated successfully"
     }
 
+## Get User Data
+    Endpoint: /user/update
+    Method: GET
+
+Example Request (json):
+
+    GET /user/settings/{userId}
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+    Accept: application/json
+
+Example Response (json):
+
+    {
+    "username":"admin", 
+    "email":"admin@myapp.pdm.fcup", 
+    "country":"Portugal", 
+    "phone":"22222222"
+    }
+
+# Streaming 
+
+## Stream
+
+    Endpoint: /stream
+    Method: POST
+
+Example Request (json):
+
+    /stream
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+    Accept: application/json
+
+    {
+    "movieId": 21, 
+    "resolution": "1080p"
+    }
+
+Example Response (json):
+
+    Conversion started
+
+Or
+
+    {
+    "movieId":21,
+    "streamUrl":"/home/co3lho22/hls_output/21_1080p/21_1080p.m3u8"
+    }
+
+## Stream Status
+
+    Endpoint: /stream/status
+    Method: POST
+
+Example Request (json):
+
+    POST /stream/status
+    Authorization: Bearer <JWT Token>
+    Content-Type: application/json
+    Accept: application/json
+
+    {
+    "movieId": 21, 
+    "resolution": "1080p"
+    }
+
+Example Response (json):
+
+    {
+    "status":"completed"
+    }
+Or
+
+    {
+    "status":"pending"
+    }
+Or
+
+    {
+    "status":"failed"
+    }
+
 ## Refresh Token
 
     Endpoint: /refresh

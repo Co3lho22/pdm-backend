@@ -18,6 +18,12 @@ import fcup.pdm.myapp.dao.MovieLinksDAO;
 public class StreamResource {
     private static final Logger logger = LogManager.getLogger(StreamResource.class);
 
+    /**
+     * Retrieves the streaming status of a movie.
+     *
+     * @param movieLink The MovieLink object containing movie ID and resolution.
+     * @return A Response object with the streaming status as JSON.
+     */
     @POST
     @Path("/status")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -39,6 +45,12 @@ public class StreamResource {
         }
     }
 
+    /**
+     * Streams a movie or starts conversion if necessary.
+     *
+     * @param movieLink The MovieLink object containing movie ID and resolution.
+     * @return A Response object indicating the result of the stream request.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +82,6 @@ public class StreamResource {
                     }
                 });
 
-                // Return a response indicating that conversion has started
                 return Response.accepted().entity("Conversion started").build();
             }
         } catch (Exception e) {
@@ -79,51 +90,4 @@ public class StreamResource {
                     .entity("Error on the server when tried to stream movie with the id: " + movieId).build();
         }
     }
-
-
-//    /**
-//     * Streams a movie based on the provided movie ID and resolution.
-//     *
-//     * @return A response containing the URL to the .m3u8 file for streaming.
-//     */
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response streamMovie(MovieLink movieLink) {
-//        int movieId = movieLink.getMovieId();
-//        String resolution = movieLink.getResolution();
-//        try {
-//            MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
-//            String m3u8FilePath = movieLinksDAO.getMoviePathFromCassandra(movieId, resolution);
-//
-//            if(m3u8FilePath != null){
-//                String jsonResponse = String.format("{\"movieId\":%d, \"streamUrl\":\"%s\"}",
-//                        movieId,
-//                        m3u8FilePath);
-//                return Response.ok().entity(jsonResponse).build();
-//            }else{
-//                String inputFilePath = movieLinksDAO.getMovieLink(movieId, resolution);
-//
-//                m3u8FilePath = VideoConverter.convertToHLS(inputFilePath,
-//                        movieId,
-//                        resolution);
-//
-//                if (m3u8FilePath != null) {
-//                    movieLinksDAO.setMovieLinkInCassandra(movieId, resolution, m3u8FilePath);
-//
-//                    String jsonResponse = String.format("{\"movieId\":%d, \"streamUrl\":\"%s\"}",
-//                            movieId,
-//                            m3u8FilePath);
-//                    return Response.ok().entity(jsonResponse).build();
-//                } else {
-//                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-//                            .entity("Error converting video").build();
-//                }
-//            }
-//        } catch (Exception e) {
-//            logger.error("Error streaming movie with the id: {}", movieId, e);
-//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-//                    .entity("Error on the server when tried to stream movie with the id: " +
-//                            movieId).build();
-//        }
-//    }
 }
