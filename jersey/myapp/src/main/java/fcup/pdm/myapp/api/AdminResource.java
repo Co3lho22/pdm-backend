@@ -1,6 +1,8 @@
 package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.AdminDAO;
+import fcup.pdm.myapp.dao.MovieDAO;
+import fcup.pdm.myapp.dao.MovieLinksCassandraDAO;
 import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.model.Movie;
 import fcup.pdm.myapp.model.MovieLink;
@@ -158,8 +160,8 @@ public class AdminResource {
         if (!isAuthorized(authHeader, AppConstants.PERMISSION_DELETE)) {
             return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
         }
-
-        if (adminDAO.deleteMovie(movieId)) {
+        MovieLinksCassandraDAO movieLinksCassandraDAO = new MovieLinksCassandraDAO();
+        if (adminDAO.deleteMovie(movieId) && movieLinksCassandraDAO.removeMovieLinksByMovieIdInCassandra(movieId)) {
             logger.info("Movie deleted successfully for movie ID: {}", movieId);
             return Response.ok().entity("Movie deleted successfully").build();
         } else {

@@ -68,6 +68,11 @@ public class StreamResource {
                 MovieLinksDAO movieLinksDAO = new MovieLinksDAO();
                 String inputFilePath = movieLinksDAO.getMovieLink(movieId, resolution);
 
+                if(inputFilePath == null){
+                    return Response.status(Response.Status.BAD_REQUEST)
+                            .entity("The movie does not exists with the movieId" + movieId).build();
+                }
+
                 VideoConverter.convertToHLS(inputFilePath, movieId, resolution, new VideoConverter.ConversionCallback() {
                     @Override
                     public void onSuccess(String outputFilePath) {

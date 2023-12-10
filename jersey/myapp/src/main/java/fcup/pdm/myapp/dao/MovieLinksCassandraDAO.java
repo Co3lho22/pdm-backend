@@ -9,8 +9,6 @@ import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 
-import java.util.UUID;
-
 /**
  * The MovieLinksCassandraDAO class provides methods for interacting with a Cassandra database
  * to manage movie links and conversion status.
@@ -41,6 +39,32 @@ public class MovieLinksCassandraDAO {
         }
         return null;
     }
+
+    /**
+     * Removes all entries from the movie_links table for a given movieId.
+     *
+     * @param movieId The unique identifier for the movie.
+     * @return true if the operation is successful, false otherwise.
+     */
+    public boolean removeMovieLinksByMovieIdInCassandra(int movieId) {
+        String query = "DELETE FROM movie_links WHERE movie_id = ?";
+        try {
+            CqlSession session = CassandraConnection.getSession();
+            PreparedStatement preparedStatement = session.prepare(query);
+            ResultSet rs = session.execute(preparedStatement.bind(movieId));
+            if (rs.wasApplied()) {
+                logger.info("Successfully removed all links for movieId = {}", movieId);
+                return true;
+            } else {
+                logger.warn("No links found or removed for movieId = {}", movieId);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Error removing links for movieId = {}", movieId, e);
+            return false;
+        }
+    }
+
 
     /**
      * Checks if a given HLS URL (movie path) exists in Cassandra.
