@@ -383,6 +383,11 @@ public class AdminDAO {
             ps.setInt(1, movieId);
             ps.executeUpdate();
 
+            String removeFav = "DELETE FROM USER_FAVORITES_MOVIES WHERE movie_id = ?";
+            ps = connection.prepareStatement(removeFav);
+            ps.setInt(1, movieId);
+            ps.executeUpdate();
+
             String deleteQuery = "DELETE FROM MOVIES WHERE id = ?";
             ps = connection.prepareStatement(deleteQuery);
             ps.setInt(1, movieId);
