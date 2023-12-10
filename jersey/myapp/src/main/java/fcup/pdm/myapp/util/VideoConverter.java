@@ -85,7 +85,7 @@ public class VideoConverter {
     private static String executeFFmpegCommand(String inputFilePath, int movieId, String resolution) {
         String outputDirectory = AppConstants.HLS_OUTPUT_PATH;
         String outputFileName = movieId + "_" + resolution;
-        String outputFilePath = outputDirectory + "/" + outputFileName + ".m3u8";
+        String outputFilePath = outputDirectory+ "/"+ outputFileName + "/" + outputFileName + ".m3u8";
         List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
                 "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
 
