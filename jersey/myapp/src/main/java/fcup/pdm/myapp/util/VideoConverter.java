@@ -92,8 +92,21 @@ public class VideoConverter {
             }
         }
 
-        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
-                "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
+//        List<String> command = Arrays.asList("ffmpeg", "-i", inputFilePath, "-codec", "copy", "-start_number", "0",
+//                "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", outputFilePath);
+
+        String scale = resolution.equals("1080p") ? "scale=-1:1080" : "scale=-1:360";
+
+        List<String> command = Arrays.asList(
+                "ffmpeg", "-i", inputFilePath,
+                "-vf", scale, // Apply the scale filter for resolution
+                "-codec", "copy",
+                "-start_number", "0",
+                "-hls_time", "10",
+                "-hls_list_size", "0",
+                "-f", "hls",
+                outputFilePath
+        );
 
 
         logger.info("Executing command: " + String.join(" ", command));
