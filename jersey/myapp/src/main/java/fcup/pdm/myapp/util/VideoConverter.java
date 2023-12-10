@@ -79,8 +79,9 @@ public class VideoConverter {
      */
     private static String executeFFmpegCommand(String inputFilePath, int movieId, String resolution) {
         String outputFileName = movieId + "_" + resolution;
-        String outputDirectory = AppConstants.HLS_OUTPUT_PATH + "/" + outputFileName;;
+        String outputDirectory = AppConstants.HLS_OUTPUT_PATH + "/" + outputFileName;
         String outputFilePath = outputDirectory + "/" + outputFileName + ".m3u8";
+        String url_endpoint = "hls/" + outputFileName + "/" + outputFileName + ".m3u8";
 
         File subDirectory = new File(outputDirectory);
         if (!subDirectory.exists()) {
@@ -109,7 +110,7 @@ public class VideoConverter {
             }
             int exitCode = process.waitFor();
             if(exitCode == 0){
-                return outputFilePath;
+                return url_endpoint;
             }
         } catch (IOException | InterruptedException e) {
             logger.error("Error executing FFmpeg command", e);
