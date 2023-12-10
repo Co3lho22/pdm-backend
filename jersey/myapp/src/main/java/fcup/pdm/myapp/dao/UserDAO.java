@@ -269,5 +269,34 @@ public class UserDAO {
             return false;
         }
     }
+
+    /**
+     * Retrieves user settings data based on userId.
+     *
+     * @param userId The ID of the user.
+     * @return User object containing user data if found, null otherwise.
+     */
+    public User getUserSettingData(int userId) {
+        User user = null;
+        String query = "SELECT username, email, country, phone FROM USERS WHERE userId = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setCountry(rs.getString("country"));
+                user.setPhone(rs.getString("phone"));
+                logger.info("Success getting user settings data for userId: {}", userId);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving user settings data for userId: {}", userId, e);
+        }
+        return user;
+    }
 }
 

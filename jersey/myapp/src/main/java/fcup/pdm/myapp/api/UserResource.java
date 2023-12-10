@@ -2,10 +2,7 @@ package fcup.pdm.myapp.api;
 
 import fcup.pdm.myapp.dao.UserDAO;
 import fcup.pdm.myapp.model.User;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
@@ -46,5 +43,36 @@ public class UserResource {
 
         }
     }
+
+    /**
+     * Get user settings.
+     *
+     * @return A Response object with the user's settings data.
+     */
+    @GET
+    @Path("/settings/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserSettings(@PathParam("userId") int userId){
+        try{
+            UserDAO userDAO = new UserDAO();
+            User userSettings = userDAO.getUserSettingData(userId);
+            if (userSettings != null) {
+                String jsonResponse = String.format("{\"username\":\"%s\", \"email\":\"%s\", \"country\":\"%s\", \"phone\":\"%s\"}",
+                        userSettings.getUsername(), userSettings.getEmail(), userSettings.getCountry(), userSettings.getPhone());
+                return Response.ok().entity(jsonResponse).build();
+            } else {
+                String jsonResponse = "{\"message\":\"User data not found\"}";
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse).build();
+            }
+        }catch (Exception e){
+            logger.error("Error retrieving settings for user with ID: {}", userId, e);
+
+            String jsonResponse = "{\"message\":\"Error retrieving user data\"}";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse).build();
+
+        }
+    }
+
 
 }
