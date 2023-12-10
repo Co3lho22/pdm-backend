@@ -134,12 +134,12 @@ public class Movie {
     }
 
     /**
-     * Add a Genre object to the list of genres associated with this movie.
+     * Set the Genres objects associated with this movie.
      *
-     * @param  genre The Genre object to be added to the list of genres.
+     * @param  genres The Genre object to be added to the list of genres.
      */
-    public void addGenre(Genre genre) {
-        this.genres.add(genre);
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
     /**

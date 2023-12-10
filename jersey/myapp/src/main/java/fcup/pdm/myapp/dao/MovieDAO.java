@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 import fcup.pdm.myapp.model.Movie;
+import fcup.pdm.myapp.model.Genre;
+
 import fcup.pdm.myapp.util.DBConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +20,35 @@ import org.apache.logging.log4j.Logger;
 public class MovieDAO {
     private static final Logger logger = LogManager.getLogger(AdminDAO.class);
 
-    // Get all films with movieId and title and duration
+    /**
+     * Fetches genres for a given movie ID.
+     *
+     * @param movieId The ID of the movie.
+     * @return A list of Genre objects associated with the movie.
+     */
+    private List<Genre> getGenresForMovie(int movieId) {
+        List<Genre> genres = new ArrayList<>();
+        String query = "SELECT g.id, g.name FROM GENRES g INNER JOIN MOVIE_GENRES mg " +
+                "ON g.id = mg.genre_id WHERE mg.movie_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, movieId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Genre genre = new Genre();
+                    genre.setId(rs.getInt("id"));
+                    genre.setName(rs.getString("name"));
+                    genres.add(genre);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching genres for movieId: {}", movieId, e);
+        } catch (Exception e) {
+            logger.error("Error retrieving all movies", e);
+        }
+        return genres;
+    }
 
     /**
      * Retrieves all movies from the database.
@@ -33,7 +63,9 @@ public class MovieDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                movies.add(extractMovieFromResultSet(rs));
+                Movie movie = extractMovieFromResultSet(rs);
+                movie.setGenres(getGenresForMovie(movie.getId()));
+                movies.add(movie);
             }
             logger.info("Retrieved all movies successfully");
         } catch (Exception e) {
